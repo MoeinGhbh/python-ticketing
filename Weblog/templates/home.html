@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h3> Welcome to NEXR </h3>
+<h4> Hello {{ current_user.username }}</h4>
+
+
+
+<div class="card">
+    {% for post in form %}
+    <a href="{{ url_for('detail', post_id=post.id) }}" class="card-body">{{ post.title }}</a>
+    {% endfor %}
+</div>
+{% endblock %}

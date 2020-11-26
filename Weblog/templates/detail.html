@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content  %}
+
+	{% if det_post.user == current_user %}
+    	<a href="{{ url_for('delete_post', post_id=det_post.id) }}" class="btn btn-danger">Delete</a>
+    	<a href="{{ url_for('update_post', post_id=det_post.id) }}" class="btn btn-danger">Update</a>
+	{% endif %}
+
+	<h3>{{ det_post.title  }}</h3>
+	<small> {{ det_post.user.username }} {{ det_post.date.strftime('%Y-%m-%d')}}</small><hr />
+	<p>{{ det_post.content }}</p>
+{% endblock  %}
