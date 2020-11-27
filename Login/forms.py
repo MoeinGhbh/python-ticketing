@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from Login.models import User, Post
+from Login.models import User
 from flask_login import current_user
 
 
@@ -37,12 +37,6 @@ class UpdateProfile(FlaskForm):
     username = StringField('User Name', validators=[DataRequired(), Length(min=3)]
                            )
 
-    # password = PasswordField('password', validators=[DataRequired(),
-    #                                                  Length(min=3, max=25)])
-    # confirm_password = PasswordField('confirm password',
-    #                                  validators=[DataRequired(), EqualTo('password')]
-    #                                  )
-
     def validate_username(self, username):
         if current_user.username != username.data:
             user = User.query.filter_by(username=username.data).first()
@@ -56,6 +50,3 @@ class UpdateProfile(FlaskForm):
                 raise ValidationError('the email is already exist.')
 
 
-class PostForm(FlaskForm):
-    title = StringField('title', validators=[DataRequired(), Length(min=5)])
-    content = TextAreaField('content', validators=[DataRequired(), Length(min=10)])
