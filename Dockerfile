@@ -18,8 +18,7 @@ RUN pip install -r requirements.txt
 
 # Run the application:
 COPY . /code
-# COPY Weblog/ /opt/venv/bin/python3/
 
-RUN pip install Weblog
+RUN pip install Login
 
 CMD ["python", "run.py"]
