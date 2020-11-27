@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, abort
-from Weblog import app
-from Weblog.forms import RegistrationForm, LoginForm, UpdateProfile, PostForm
-from Weblog.models import User, Post
-from Weblog import db, bcrypt
+from Login import app
+from Login.forms import RegistrationForm, LoginForm, UpdateProfile, PostForm
+from Login.models import User, Post
+from Login import db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 
 
