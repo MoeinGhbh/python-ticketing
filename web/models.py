@@ -1,4 +1,4 @@
-from Login import db, login_manager
+from web import db, login_manager
 import datetime
 from flask_login import UserMixin
 
@@ -20,3 +20,6 @@ class User(db.Model, UserMixin):
 
 
 
+class Role(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    rolename = db.Column(db.String(20),nullable=False)
