@@ -19,6 +19,6 @@ RUN pip install -r requirements.txt
 # Run the application:
 COPY . /code
 
-RUN pip install Login
+# RUN pip install Login
 
 CMD ["python", "run.py"]
