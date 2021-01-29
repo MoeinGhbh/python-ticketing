@@ -1,0 +1,5 @@
+What is a blueprint?
+A blueprint defines a collection of views, templates, static files and other elements that can be applied to an application. For example, let’s imagine that we have a blueprint for an admin panel. This blueprint would define the views for routes like /admin/login and /admin/dashboard. It may also include the templates and static files that will be served on those routes. We can then use this blueprint to add an admin panel to our app, be it a social network for astronauts or a CRM for rocket salesmen.
+
+Why would you use blueprints?
+The killer use-case for blueprints is to organize our application into distinct components. For a Twitter-like microblog, we might have a blueprint for the website pages, e.g. index.html and about.html. Then we could have another for the logged-in dashboard where we show all of the latest posts and yet another for our administrator’s panel. Each distinct area of the site can be separated into distinct areas of the code as well. This lets us structure our app as several smaller “apps” that each do one thing.
