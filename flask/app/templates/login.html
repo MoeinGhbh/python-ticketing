@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% include 'include/error_messages.html' %}
+
+        <form method="POST" action="">
+            {{ form.csrf_token }}
+            {{ form.email.label(class='form-control-label') }} {{ form.email(class='form-control') }}
+            {{ form.password.label(class='form-control-label') }} {{ form.password(class='form-control') }}
+            {{ form.remember.label }} {{ form.remember }}<br/>
+            <input type="submit" value="Login" class="btn btn-secondary">
+        </form>
+
+{% endblock %}

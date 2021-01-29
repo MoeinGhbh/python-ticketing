@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form action="" method="post">
+    {{ form.csrf_token }}
+    {{ form.name.label(class='form-control-label') }} {{ form.name(class='form-control') }}
+    {{ form.description.label(class='form-control-label') }} {{ form.description(class='form-control') }}
+    {{ form.startdate.label(class='form-control-label') }} {{ form.startdate(class='form-control') }}
+    {{ form.enddate.label(class='form-control-label') }} {{ form.enddate(class='form-control') }}
+    {{ form.capacity.label(class='form-control-label') }} {{ form.capacity(class='form-control') }}
+    <input type="submit" value="add new event" class="btn btn-secondary">
+</form>
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+<h3> Roles </h3>
+
+
+<div class="container">
+    <div class="row">
+            <div class="col-3">
+                <h4>Role name</h4>
+            </div>
+    </div>
+    {% for rolename in form %}
+    <div class="row">
+       
+        <div class="col-sm">
+            <a href="{{ url_for('rolenamedetail', rolename_id=rolename.id) }}" class="card-body">{{ rolename.role_name
+                }}</a>
+        </div>
+    </div>
+
+    {% endfor %}
+</div>
+<hr />
+<a href="{{ url_for('new_rolename') }}" class="btn btn-secondary">create new Role</a>
+
+{% endblock %}
