@@ -13,23 +13,7 @@ def home():
     return render_template('home.html', form=event)
 
 
-############################################## user login logout register  #####################################################
-
-@app.route('/register', methods=['GET', 'POST'])
-def registration():
-    reg_form = RegistrationForm()
-    if reg_form.validate_on_submit():
-        hashed_pass = bcrypt.generate_password_hash(
-            reg_form.password.data).decode('utf-8')
-        new_user = User(username=reg_form.username.data,
-                        email=reg_form.email.data, password=hashed_pass)
-        db.session.add(new_user)
-        db.session.commit()
-        flash('You register successfully.', 'success')
-        return redirect(url_for('home'))
-    else:
-        print('not valid')
-    return render_template('registration.html', form=reg_form)
+############################################## user login logout   #####################################################
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -57,32 +41,100 @@ def logout():
     flash('you logged out successfully', 'success')
     return redirect(url_for('home'))
 
-############################################## profile  #####################################################
+############################################## user    #####################################################
 
 
-@app.route('/profile', methods=['GET', 'POST'])
+@app.route('/users', methods=['GET', 'POST'])
 @login_required
-def profile():
-    upfrm = UpdateProfile()
-    if upfrm.validate_on_submit():
-        current_user.email = upfrm.email.data
-        current_user.username = upfrm.username.data
+def users():
+    users = User.query.all()
+    return render_template('Users.html', form=users)
+
+
+@app.route('/user/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def userdetail(user_id):
+    users = User.query.get_or_404(user_id)
+    return render_template('userdetail.html', form=users)
+
+# @app.route('/rolenamedetail/<int:role_id>/delete')
+# @login_required
+# def role_delete(role_id):
+#     role = Rolename.query.get_or_404(role_id)
+#     # if .author != current_user:
+#     #     abort(403)
+#     db.session.delete(role)
+#     db.session.commit()
+#     flash('role deleted', 'info')
+#     return redirect(url_for('home'))
+
+
+# @app.route('/rolenamedetail/<int:role_id>/update', methods=['GET', 'POST'])
+# @login_required
+# def role_update(role_id):
+#     rolename = Rolename.query.get_or_404(role_id)
+#     print(rolename)
+#     # if event.author != current_user:
+#     #     abort(403)
+#     form = RolenameForm()
+#     if form.validate_on_submit():
+#         rolename.role_name = form.role_name.data
+#         db.session.commit()
+#         flash('role updated', 'info')
+#         return redirect(url_for('rolenamedetail', rolename_id=rolename.id))
+#     elif request.method == 'GET':
+#         form.role_name.data = rolename.role_name
+#         # form.id.data = rolename.id
+#     return render_template('rolename_update.html', form=form)
+
+
+@app.route('/userdetail/<int:user_id>/update', methods=['GET', 'POST'])
+@login_required
+def user_update(user_id):
+    users = User.query.get_or_404(user_id)
+    # if event.author != current_user:
+    #     abort(403)
+    form = UpdateProfile()
+    if form.validate_on_submit():
+        users.username = form.username.data
         db.session.commit()
-        flash('your account update successfully', 'info')
-        return redirect(url_for('profile'))
+        flash('user updated', 'info')
+        return redirect(url_for('userdetail', user_id=users.id))
     elif request.method == 'GET':
-        upfrm.email.data = current_user.email
-        upfrm.username.data = current_user.username
-    return render_template('profile.html', form=upfrm)
+        form.username.data = users.username
+        form.email.data = users.email
+    return render_template('user_update.html', form=form)
+
+@app.route('/userdetail/<int:user_id>/delete')
+@login_required
+def user_delete(user_id):
+    user = User.query.get_or_404(user_id)
+    # if .author != current_user:
+    #     abort(403)
+    db.session.delete(user)
+    db.session.commit()
+    flash('user deleted', 'info')
+    return redirect(url_for('home'))
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def registration():
+    reg_form = RegistrationForm()
+    if reg_form.validate_on_submit():
+        hashed_pass = bcrypt.generate_password_hash(
+            reg_form.password.data).decode('utf-8')
+        new_user = User(username=reg_form.username.data,
+                        email=reg_form.email.data, password=hashed_pass)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('You register successfully.', 'success')
+        return redirect(url_for('home'))
+    else:
+        print('not valid')
+    return render_template('registration.html', form=reg_form)
+
 
 ############################################## Event  #####################################################
-
-
-@app.route('/event/<int:event_id>', methods=['GET', 'POST'])
-def eventdetail(event_id):
-    event = Event.query.get_or_404(event_id)
-    # event = Event.query.filter_by(id=event_id)
-    return render_template('eventdetail.html', form=event)
 
 
 @app.route('/event', methods=['GET', 'POST'])
@@ -97,6 +149,13 @@ def event():
     elif request.method == 'GET':
         eventform = Event.query.all()
     return render_template('event.html', form=eventform)
+
+
+@app.route('/event/<int:event_id>', methods=['GET', 'POST'])
+def eventdetail(event_id):
+    event = Event.query.get_or_404(event_id)
+    # event = Event.query.filter_by(id=event_id)
+    return render_template('eventdetail.html', form=event)
 
 
 @app.route('/event/new', methods=['GET', 'POST'])
@@ -158,8 +217,6 @@ def rolename():
 @login_required
 def rolenamedetail(rolename_id):
     rolenames = Rolename.query.get_or_404(rolename_id)
-    # role =  RolenameForm()
-    # role.role_name = rolenames.role_name
     return render_template('rolenamedetail.html', form=rolenames)
 
 
@@ -204,7 +261,7 @@ def role_update(role_id):
     elif request.method == 'GET':
         form.role_name.data = rolename.role_name
         # form.id.data = rolename.id
-    return  render_template('rolename_update.html', form=form)
+    return render_template('rolename_update.html', form=form)
 
 ###########################################        participants        ####################################
 

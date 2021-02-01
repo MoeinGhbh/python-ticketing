@@ -1,19 +1,36 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+{% include 'include/error_messages.html' %}
+<div class="container">
+    <div class="row">
+        <div>
+            <h4> Define Role</h4>
+        </div>
+    </div>
+</div>
+<hr />
 <form method="POST" action="">
     <div class="container">
         <div class="row">
             <div class="col-3">
-                {{ form.role_name.label }}
+                <h6> {{ form.role_name.label }} </h6>
             </div>
-            <div class="row">
+
+            <div class="col-3">
                 {{ form.role_name }}
             </div>
         </div>
+        <hr />
+        <div class="row">
+            <div class="col-3">
+                <input type="submit" value="Register" class="btn btn-secondary">
+            </div>
+
+
+        </div>
     </div>
-    <hr />
-    <input type="submit" value="save" class="btn btn-secondary">
+
+
 </form>
 {% endblock %}

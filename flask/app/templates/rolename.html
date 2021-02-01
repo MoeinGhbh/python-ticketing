@@ -4,27 +4,36 @@
 
 
 
-<h3> Roles </h3>
-<a href="{{ url_for('new_rolename') }}" class="btn btn-secondary">create new Role</a>
+<h3> Roles Management </h3>
 <hr />
 
 <div class="container">
     <div class="row">
-            <div class="col-3">
-                <h4>Role name</h4>
-            </div>
+        <div class="col-3">
+            <h5>Role name</h5>
+        </div>
     </div>
     {% for rolename in form %}
     <div class="row">
-       
+
         <div class="col-sm">
             <a href="{{ url_for('rolenamedetail', rolename_id=rolename.id) }}" class="card-body">{{ rolename.role_name
                 }}</a>
         </div>
     </div>
-
-    {% endfor %}
 </div>
+{% endfor %}
+<hr />
+{% if current_user.is_authenticated %}
+{% if form.username == current_user.username or current_user.username == 'admin' %}
+<a href="{{ url_for('new_rolename') }}" class="btn btn-secondary">create new Role</a>
+<br>
+<br>
+<small> Note: admin and event owner can edit this information </small>
+{% endif %}
+{% endif %}
+
+
 
 
 {% endblock %}

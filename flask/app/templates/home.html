@@ -53,12 +53,11 @@
    
 </div>
 <hr />
-{% if current_user.is_authenticated %}
-{% if form.username == current_user.username or current_user.username == 'admin' %}
+{% if current_user.is_authenticated and current_user.username == 'admin' %}
 
 <a href="{{ url_for('new_event') }}" class="btn btn-secondary">create new event</a>
-<hr />
+<br>
+<br>
 <small> Note:     admin and event owner can edit this information </small>
-{% endif %}
 {% endif %}
 {% endblock %}
