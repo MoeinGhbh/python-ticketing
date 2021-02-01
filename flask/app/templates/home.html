@@ -9,10 +9,10 @@
 
 <div class="container">
     <div class="row">
-            <div class="col-3">
+            <div class="col-sm">
                 <h4>event name</h4>
             </div>
-            <div class="col-sm">
+            <div class="col-3">
                 <h4>description</h4>
             </div>
             <div class="col-sm">
@@ -30,10 +30,10 @@
     </div>
         {% for event in form %}
         <div class="row">
-            <div class="col-3">
+            <div class="col-sm">
                 <a href="{{ url_for('eventdetail', event_id=event.id) }}" class="card-body">{{ event.name }}</a>
             </div>
-            <div class="col-sm">
+            <div class="col-3">
                 {{ event.description }}
             </div>
             <div class="col-sm">

@@ -73,9 +73,8 @@ class CreateEventForm(FlaskForm):
 
 
 class RolenameForm(FlaskForm):
-    id = StringField('Role Name Id', validators=[DataRequired()])
-    role_name = StringField('Role Name', validators=[
-                            DataRequired(), Length(min=3)])
+    # id = StringField('Role Name Id', validators=[DataRequired()])
+    role_name = StringField('Role Name', validators=[DataRequired(), Length(min=3)])
 
 #####################################################      Participant     ##########################################################
 

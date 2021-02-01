@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from app import app
-from app.forms import  CreateEventForm, RegistrationForm, LoginForm, RolenameForm, UpdateProfile, AddParticipantForm
+from app.forms import CreateEventForm, RegistrationForm, LoginForm, RolenameForm, UpdateProfile, AddParticipantForm
 from app.models import User, Role, Rolename, Event, Participant
 from app import db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
@@ -158,10 +158,12 @@ def rolename():
 @login_required
 def rolenamedetail(rolename_id):
     rolenames = Rolename.query.get_or_404(rolename_id)
+    # role =  RolenameForm()
+    # role.role_name = rolenames.role_name
     return render_template('rolenamedetail.html', form=rolenames)
 
 
-@app.route('/new_role', methods=['GET','POST'])
+@app.route('/new_role', methods=['GET', 'POST'])
 @login_required
 def new_rolename():
     form = RolenameForm()
@@ -174,7 +176,39 @@ def new_rolename():
     return render_template('new_role.html', form=form)
 
 
+@app.route('/rolenamedetail/<int:role_id>/delete')
+@login_required
+def role_delete(role_id):
+    role = Rolename.query.get_or_404(role_id)
+    # if .author != current_user:
+    #     abort(403)
+    db.session.delete(role)
+    db.session.commit()
+    flash('role deleted', 'info')
+    return redirect(url_for('home'))
+
+
+@app.route('/rolenamedetail/<int:role_id>/update', methods=['GET', 'POST'])
+@login_required
+def role_update(role_id):
+    rolename = Rolename.query.get_or_404(role_id)
+    print(rolename)
+    # if event.author != current_user:
+    #     abort(403)
+    form = RolenameForm()
+    if form.validate_on_submit():
+        rolename.role_name = form.role_name.data
+        db.session.commit()
+        flash('role updated', 'info')
+        return redirect(url_for('rolenamedetail', role_id=rolename.id))
+    elif request.method == 'GET':
+        form.role_name.data = rolename.role_name
+        # form.id.data = rolename.id
+    return  render_template('rolename_update.html', form=form)
+
 ###########################################        participants        ####################################
+
+
 @app.route('/participant', methods=['GET', 'POST'])
 @login_required
 def participant():
