@@ -200,7 +200,7 @@ def role_update(role_id):
         rolename.role_name = form.role_name.data
         db.session.commit()
         flash('role updated', 'info')
-        return redirect(url_for('rolenamedetail', role_id=rolename.id))
+        return redirect(url_for('rolenamedetail', rolename_id=rolename.id))
     elif request.method == 'GET':
         form.role_name.data = rolename.role_name
         # form.id.data = rolename.id
