@@ -1,12 +1,10 @@
 from flask_wtf import FlaskForm
-from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, TextAreaField
 from wtforms.fields.core import IntegerField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from app.models import Role, User
 from flask_login import current_user
 from wtforms.fields.html5 import DateField
-
 
 #####################################################      User   ###################################################################
 
@@ -55,6 +53,9 @@ class UpdateProfile(FlaskForm):
             if user:
                 raise ValidationError('the email is already exist.')
 
+
+
+
 #####################################################      Event      ###############################################################
 
 
@@ -69,20 +70,26 @@ class CreateEventForm(FlaskForm):
     # def validate_eventname(self, event_name):
     #     Event.query.filter_by(event_name=event_name)
 
-###################################################         Role        #############################################################
+###################################################         Role Name       #############################################################
 
 
 class RolenameForm(FlaskForm):
-    # id = StringField('Role Name Id', validators=[DataRequired()])
     role_name = StringField('Role Name', validators=[DataRequired(), Length(min=3)])
+
+###################################################         Role        #############################################################
+
+
+class RoleForm(FlaskForm):
+    role = SelectField('Role', choices=[])
+    username = StringField('User name')
+    roles = StringField('User''s role')
 
 #####################################################      Participant     ##########################################################
 
 
 class AddParticipantForm(FlaskForm):
     name = StringField('participant email', validators=[DataRequired()])
-    email = StringField('participant email', validators=[
-                        DataRequired(), Email()])
+    email = StringField('participant email', validators=[DataRequired(), Email()])
 
 
 #####################################################      Send Email     ##########################################################

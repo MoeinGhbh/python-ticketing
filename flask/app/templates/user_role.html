@@ -5,14 +5,14 @@
 <div class="container">
     <div class="row">
         <div>
-            <h4> User Management</h4>
+            <h4> Assign Role </h4>
         </div>
     </div>
 </div>
 <hr />
 
 <form action="" method="post">
-    {{ form.csrf_token }}
+  
     <div class="container">
         <div class="row">
             <div class="col-3">
@@ -20,35 +20,44 @@
                 <h6> User name</h6>
             </div>
             <div class="col-sm">
+              
                 {{ form.username }}
+               
             </div>
         </div>
         <div class="row">
             <div class="col-3">
-                <h6>  Email Address </h6>
+
+                <h6> User Roles</h6>
             </div>
             <div class="col-sm">
-                {{ form.email }}
+              
+                {{ form.roles }}
+               
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+
+                <h6> Select new Role</h6>
+            </div>
+            <div class="col-sm">
+                {{ form.role }}
             </div>
         </div>
     </div>
 
     <hr />
 
-
     {% if current_user.username == 'admin' %}
-
-
-    <a href="{{ url_for('user_delete', user_id=form.id) }}" class="btn btn-dark">Delete</a>
-    <a href="{{ url_for('user_update', user_id=form.id) }}" class="btn btn-secondary">Update</a>
-    <a href="{{ url_for('user_role', user_id=form.id) }}" class="btn btn-dark">add role</a>
+   
     <br>
     <br>
     <small> Note: admin and event owner can edit this information </small>
     {% endif %}
-
 </form>
 
+  
 
 
 {% endblock %}
