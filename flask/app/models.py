@@ -17,6 +17,7 @@ class Rolename(db.Model, UserMixin):
         return f'{self.__class__.__name__}({self.id},{self.role_name})'
 
 
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), unique=True, nullable=False)

@@ -15,14 +15,14 @@
     </div>
     {% for rolename in form %}
     <div class="row">
-
         <div class="col-sm">
             <a href="{{ url_for('rolenamedetail', rolename_id=rolename.id) }}" class="card-body">{{ rolename.role_name
                 }}</a>
         </div>
     </div>
+    {% endfor %}
 </div>
-{% endfor %}
+
 <hr />
 {% if current_user.is_authenticated %}
 {% if form.username == current_user.username or current_user.username == 'admin' %}

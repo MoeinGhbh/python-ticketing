@@ -12,7 +12,11 @@
 <hr />
 
 <form action="" method="post">
-  
+
+    <div style="display: none;">
+        {{ form.user_id }}
+    </div>
+
     <div class="container">
         <div class="row">
             <div class="col-3">
@@ -20,9 +24,9 @@
                 <h6> User name</h6>
             </div>
             <div class="col-sm">
-              
+
                 {{ form.username }}
-               
+
             </div>
         </div>
         <div class="row">
@@ -31,9 +35,9 @@
                 <h6> User Roles</h6>
             </div>
             <div class="col-sm">
-              
+
                 {{ form.roles }}
-               
+
             </div>
         </div>
         <div class="row">
@@ -50,14 +54,29 @@
     <hr />
 
     {% if current_user.username == 'admin' %}
-   
+    <a id="hrefDelete" href="{{ url_for('roles_delete', user_id=form.user_id, role_id=1) }}"
+        class="btn btn-dark">Delete</a>
+    <a id="hrefInsert" href="{{ url_for('roles_insert', user_id=form.user_id, role_id=1) }}"
+        class="btn btn-secondary">Insert</a>
     <br>
     <br>
     <small> Note: admin and event owner can edit this information </small>
     {% endif %}
 </form>
 
-  
+<script>
+    let role_select = document.getElementById('role');
+    let hrefDelete = document.getElementById('hrefDelete');
+    let hrefInsert = document.getElementById('hrefInsert');
+
+    role_select.onchange = function () {
+        let regex = new RegExp("\\d*/role");
+        var varrole = role_select.value;
+        document.getElementById('hrefDelete').href = hrefDelete.href.replace(regex, +varrole + '/role')
+        document.getElementById('hrefInsert').href = hrefInsert.href.replace(regex, +varrole + '/role')
+    }
+</script>
+
 
 
 {% endblock %}

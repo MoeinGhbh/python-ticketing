@@ -8,6 +8,7 @@ from wtforms.fields.html5 import DateField
 
 #####################################################      User   ###################################################################
 
+
 class RegistrationForm(FlaskForm):
     username = StringField('User Name', validators=[DataRequired(), Length(min=3)]
                            )
@@ -54,8 +55,6 @@ class UpdateProfile(FlaskForm):
                 raise ValidationError('the email is already exist.')
 
 
-
-
 #####################################################      Event      ###############################################################
 
 
@@ -74,22 +73,26 @@ class CreateEventForm(FlaskForm):
 
 
 class RolenameForm(FlaskForm):
-    role_name = StringField('Role Name', validators=[DataRequired(), Length(min=3)])
+    role_name = StringField('Role Name', validators=[
+                            DataRequired(), Length(min=3)])
 
 ###################################################         Role        #############################################################
 
 
 class RoleForm(FlaskForm):
-    role = SelectField('Role', choices=[])
+    role = SelectField('Role')
     username = StringField('User name')
+    user_id = StringField('User id')
     roles = StringField('User''s role')
+
 
 #####################################################      Participant     ##########################################################
 
 
 class AddParticipantForm(FlaskForm):
     name = StringField('participant email', validators=[DataRequired()])
-    email = StringField('participant email', validators=[DataRequired(), Email()])
+    email = StringField('participant email', validators=[
+                        DataRequired(), Email()])
 
 
 #####################################################      Send Email     ##########################################################
