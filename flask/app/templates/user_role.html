@@ -49,19 +49,31 @@
                 {{ form.role }}
             </div>
         </div>
+        <hr />
+        <div class=row>
+            <div class="col-1">
+                <a href="{{ url_for('userdetail', user_id=form.user_id) }}" class="btn btn-dark"> Back </a>
+            </div>
+
+            <div class="col-1">
+                {% if current_user.username == 'admin' %}
+                <a id="hrefDelete" href="{{ url_for('roles_delete', user_id=form.user_id, role_id=1) }}"
+                    class="btn btn-dark">Delete</a>
+            </div>
+            <div class="col-1">
+                <a id="hrefInsert" href="{{ url_for('roles_insert', user_id=form.user_id, role_id=1) }}"
+                    class="btn btn-secondary">Insert</a>
+            </div>
+            {% endif %}
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-12">
+                <small> Note: admin and event owner can edit this information </small>
+            </div>
+        </div>
     </div>
-
-    <hr />
-
-    {% if current_user.username == 'admin' %}
-    <a id="hrefDelete" href="{{ url_for('roles_delete', user_id=form.user_id, role_id=1) }}"
-        class="btn btn-dark">Delete</a>
-    <a id="hrefInsert" href="{{ url_for('roles_insert', user_id=form.user_id, role_id=1) }}"
-        class="btn btn-secondary">Insert</a>
-    <br>
-    <br>
-    <small> Note: admin and event owner can edit this information </small>
-    {% endif %}
 </form>
 
 <script>
