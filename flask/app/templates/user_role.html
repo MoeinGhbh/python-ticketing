@@ -11,7 +11,7 @@
 </div>
 <hr />
 
-<form action="" method="post">
+<form action="" method="POST">
 
     <div style="display: none;">
         {{ form.user_id }}
@@ -70,10 +70,11 @@
     let hrefInsert = document.getElementById('hrefInsert');
 
     role_select.onchange = function () {
-        let regex = new RegExp("\\d*/role");
+        let regexdel = new RegExp("\\d*/delete");
+        let regexinst = new RegExp("\\d*/insert");
         var varrole = role_select.value;
-        document.getElementById('hrefDelete').href = hrefDelete.href.replace(regex, +varrole + '/role')
-        document.getElementById('hrefInsert').href = hrefInsert.href.replace(regex, +varrole + '/role')
+        document.getElementById('hrefDelete').href = hrefDelete.href.replace(regexdel, +varrole + '/delete')
+        document.getElementById('hrefInsert').href = hrefInsert.href.replace(regexinst, +varrole + '/insert')
     }
 </script>
 

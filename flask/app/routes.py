@@ -86,7 +86,7 @@ def user_delete(user_id):
     db.session.delete(user)
     db.session.commit()
     flash('user deleted', 'info')
-    return redirect(url_for('home'))
+    return redirect(url_for('users'))
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -100,7 +100,7 @@ def registration():
         db.session.add(new_user)
         db.session.commit()
         flash('You register successfully.', 'success')
-        return redirect(url_for('home'))
+        return redirect(url_for('users'))
     else:
         print('not valid')
     return render_template('registration.html', form=reg_form)
@@ -130,18 +130,30 @@ def user_role(user_id):
     return render_template('user_role.html', form=roleform)
 
 
-@app.route('/userdetail/<int:user_id>/<int:role_id>/role')
+@app.route('/userdetail/<int:user_id>/<int:role_id>/insert')
 @login_required
 def roles_insert(user_id, role_id):
-    print(user_id, role_id)
+    roleform = RoleForm()
+    if request.method == 'POST' or request.method == 'GET':
+        print(user_id, role_id)
+        new_user_role = Role(rolename_id=role_id,user_id=user_id)
+        db.session.add(new_user_role)
+        db.session.commit()
+        flash('new role assigne to the user','success')
+        return redirect(url_for('user_role',user_id=user_id))
     return render_template('home.html')
 
 
-@app.route('/userdetail/<int:user_id>/<int:role_id>/role')
+@app.route('/userdetail/<int:user_id>/<int:role_id>/delete')
 @login_required
 def roles_delete(user_id, role_id):
     print(user_id, role_id)
-    return render_template('home.html')
+    role= Role.query.filter_by(user_id=user_id, rolename_id=role_id).first()
+    db.session.delete(role)
+    db.session.commit()
+    flash('role deleted', 'info')
+    return redirect(url_for('user_role',user_id=user_id))
+    # return render_template('home.html')
 
 
 ############################################## Event  #####################################################
