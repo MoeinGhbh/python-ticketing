@@ -7,11 +7,9 @@
             <h4> Update Role</h4>
         </div>
     </div>
-</div>
-<hr />
-<form action="" method="post">
-    {{ form.csrf_token }}
-    <div class="container">
+    <hr />
+    <form action="" method="post">
+        {{ form.csrf_token }}
         <div class="row">
             <div class="col-2">
                 {{ form.role_name.label(class='form-control-label') }}
@@ -22,11 +20,14 @@
         </div>
         <hr />
         <div class="row">
-            <div class="col-2">
+            <div class="col-1">
+                <a href="{{ url_for('rolenamedetail', rolename_id=form.id.data) }}" class="btn btn-dark"> Back </a>
+            </div>
+            <div class="col-1">
                 <input type="submit" value="Update" class="btn btn-secondary">
             </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>
 
 {% endblock %}

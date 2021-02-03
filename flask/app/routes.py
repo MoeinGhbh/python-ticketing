@@ -277,6 +277,7 @@ def role_update(role_id):
         return redirect(url_for('rolenamedetail', rolename_id=rolename.id))
     elif request.method == 'GET':
         form.role_name.data = rolename.role_name
+        form.id.data = rolename.id
     return render_template('rolename_update.html', form=form)
 
 ###########################################        participants        ####################################

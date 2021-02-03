@@ -4,9 +4,9 @@
 
 
 <h3> Role Management </h3>
+<div class="container">
+    <form action="" method="POST">
 
-<form action="" method="POST">
-    <div class="container">
         <div class="row">
             <div class="col-3">
                 <h4> Role Name </h4>
@@ -17,19 +17,34 @@
                 <small>{{ form.role_name }}</small>
             </div>
         </div>
+
+    </form>
+    <hr />
+
+
+    <div class="row">
+        <div class="col-12">
+            <a href="{{ url_for('rolename') }}" class="btn btn-dark"> Back </a>
+
+            {% if current_user.username == 'admin' %}
+
+
+
+            <a href="{{ url_for('role_delete', role_id=form.id) }}" class="btn btn-secondary">Delete</a>
+            <a href="{{ url_for('role_update', role_id=form.id) }}" class="btn btn-secondary">Update</a>
+           
+
+            {% endif %}
+        </div>
+
     </div>
-</form>
+    <div class="row">
+        <div class="col-12">
+            <br>
+            <br>
+            <small> Note: admin and event owner can edit this information </small>
+        </div>
+    </div>
 
-
-{% if current_user.username == 'admin' %}
-
-<hr />
-
-<a href="{{ url_for('role_delete', role_id=form.id) }}" class="btn btn-dark">Delete</a>
-<a href="{{ url_for('role_update', role_id=form.id) }}" class="btn btn-secondary">Update</a>
-<small> Note: admin and event owner can edit this information </small>
-
-{% endif %}
-
+</div>
 {% endblock %}
-

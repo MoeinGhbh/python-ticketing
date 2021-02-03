@@ -41,9 +41,9 @@
         <a href="{{ url_for('users') }}" class="btn btn-dark">   Back   </a>
  
 
-    <a href="{{ url_for('user_delete', user_id=form.id) }}" class="btn btn-dark">Delete</a>
+    <a href="{{ url_for('user_delete', user_id=form.id) }}" class="btn btn-secondary">Delete</a>
     <a href="{{ url_for('user_update', user_id=form.id) }}" class="btn btn-secondary">Update</a>
-    <a href="{{ url_for('user_role', user_id=form.id) }}" class="btn btn-dark">Eidt role</a>
+    <a href="{{ url_for('user_role', user_id=form.id) }}" class="btn btn-secondary">Eidt role</a>
     <br>
     <br>
     <small> Note: admin and event owner can edit this information </small>

@@ -28,7 +28,7 @@
 
 <hr />
 {% if form.eventowner.username == current_user.username or current_user.username == 'admin' %}
-<a href="{{ url_for('delete', participant_id=form.id) }}" class="btn btn-dark">Delete</a>
+<a href="{{ url_for('delete', participant_id=form.id) }}" class="btn btn-secondary">Delete</a>
 <a href="{{ url_for('update', participant_id=form.id) }}" class="btn btn-secondary">Update</a>
 {% endif %}
 

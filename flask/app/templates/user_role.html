@@ -58,7 +58,7 @@
             <div class="col-1">
                 {% if current_user.username == 'admin' %}
                 <a id="hrefDelete" href="{{ url_for('roles_delete', user_id=form.user_id, role_id=1) }}"
-                    class="btn btn-dark">Delete</a>
+                    class="btn btn-secondary">Delete</a>
             </div>
             <div class="col-1">
                 <a id="hrefInsert" href="{{ url_for('roles_insert', user_id=form.user_id, role_id=1) }}"
