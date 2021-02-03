@@ -37,7 +37,9 @@
 
 
     {% if current_user.username == 'admin' %}
-
+ 
+        <a href="{{ url_for('users') }}" class="btn btn-dark">   Back   </a>
+ 
 
     <a href="{{ url_for('user_delete', user_id=form.id) }}" class="btn btn-dark">Delete</a>
     <a href="{{ url_for('user_update', user_id=form.id) }}" class="btn btn-secondary">Update</a>

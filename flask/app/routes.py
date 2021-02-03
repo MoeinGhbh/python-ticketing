@@ -68,12 +68,14 @@ def user_update(user_id):
     form = UpdateProfile()
     if request.method == 'POST':
         users.username = form.username.data
+        users.email = form.email.data
         db.session.commit()
         flash('user updated', 'info')
         return redirect(url_for('userdetail', user_id=users.id))
     elif request.method == 'GET':
         form.username.data = users.username
         form.email.data = users.email
+        form.id = users.id
     return render_template('user_update.html', form=form)
 
 
