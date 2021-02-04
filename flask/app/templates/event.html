@@ -4,10 +4,10 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-3">
+        <div class="col-sm">
             <h4>event name</h4>
         </div>
-        <div class="col-sm">
+        <div class="col-3">
             <h4>description</h4>
         </div>
         <div class="col-sm">
@@ -25,10 +25,10 @@
     </div>
     {% for event in form %}
     <div class="row">
-        <div class="col-3">
+        <div class="col-sm">
             <a href="{{ url_for('eventdetail', event_id=event.id) }}" class="card-body">{{ event.name }}</a>
         </div>
-        <div class="col-sm">
+        <div class="col-3">
             {{ event.description }}
         </div>
         <div class="col-sm">
@@ -41,13 +41,23 @@
             {{ event.capacity }}
         </div>
         <div class="col-sm">
-            {{ event.user_id }}
+            {{ event.eventowner.username }}
         </div>
     </div>
+    <hr />
     {% endfor %}
 
+    <div class="row">
+        <div>
+           
+            <a href="{{ url_for('paging' , move=-1) }}" class="btn btn-secondary">  Previous </a>
+        </div>
+        <div class="col=3">
+            <a href="{{ url_for('paging' , move=1) }}" class="btn btn-secondary">  Next </a>
+        </div>
+    </div>
+
 </div>
-<hr />
 {% if current_user.is_authenticated %}
 {% if form.username == current_user.username or current_user.username == 'admin' %}
             <a href="{{ url_for('new_event') }}" class="btn btn-secondary">create new event</a>

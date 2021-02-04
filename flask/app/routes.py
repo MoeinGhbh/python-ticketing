@@ -9,8 +9,7 @@ import re
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    event = Event.query.all()
-    print(event)
+    event = Event.query.limit(5).all()
     return render_template('home.html', form=event)
 
 
@@ -155,9 +154,9 @@ def roles_insert(user_id, role_id):
         print(user_id, role_id)
         checkRole = Role.query.filter_by(
             rolename_id=role_id, user_id=user_id).first()
-        print(checkRole)    
+        print(checkRole)
         if checkRole:
-            flash('This role is already assigned to the user','danger')
+            flash('This role is already assigned to the user', 'danger')
             return redirect(url_for('user_role', user_id=user_id))
         else:
             new_user_role = Role(rolename_id=role_id, user_id=user_id)
@@ -188,14 +187,32 @@ def roles_delete(user_id, role_id):
 @app.route('/event', methods=['GET', 'POST'])
 @login_required
 def event():
-    eventform = CreateEventForm()
-    if eventform.validate_on_submit():
-        # current_user.rolename = roleform.role_name.data
-        print('insert event in data base')
-        flash('your event insert successfully', 'info')
-        return redirect(url_for('event'))
-    elif request.method == 'GET':
-        eventform = Event.query.all()
+    # eventform = CreateEventForm()
+    eventform = Event.query.limit(5).all()
+    return render_template('event.html', form=eventform)
+
+
+
+
+page_siz =5 
+page = 1
+@app.route('/event/<float(signed=True):move>/paging', methods=['GET', 'POST'])
+@login_required
+def paging(move):
+    global page_siz
+    global page
+    all = Event.query.all()
+    MaxPage = round(len(all)/5)
+    if move == 1:
+        if page < MaxPage:
+            page += 1
+    else:
+        if page > 1:
+            page -= 1
+    end = page * page_siz
+    first = (page * page_siz)-5
+    eventform = Event.query.limit(end).all()
+    eventform = eventform[first:]
     return render_template('event.html', form=eventform)
 
 
@@ -209,14 +226,18 @@ def eventdetail(event_id):
 @login_required
 def new_event():
     form = CreateEventForm()
-    if form.validate_on_submit():
-        event = Event(name=form.name.data, description=form.description.data, eventowner=current_user,
-                      startdate=form.startdate.data, enddate=form.enddate.data, capacity=form.capacity.data)  # eventowner=current_user
-        db.session.add(event)
-        db.session.commit()
-        flash('event created', 'info')
-        return redirect(url_for('home'))
-    return render_template('create_event.html', form=form)
+    regex = '\d+'
+    if re.match(regex, str(form.capacity.data)):
+        if request.method == "POST":
+            event = Event(name=form.name.data, description=form.description.data, eventowner=current_user,
+                          startdate=form.startdate.data, enddate=form.enddate.data, capacity=form.capacity.data)  # eventowner=current_user
+            db.session.add(event)
+            db.session.commit()
+            flash('event created', 'info')
+            return redirect(url_for('home'))
+    else:
+        flash('please enter number', 'danger')
+        return render_template('create_event.html', form=form)
 
 
 @app.route('/event/<int:event_id>/delete')
@@ -273,10 +294,11 @@ def rolenamedetail(rolename_id):
 def new_rolename():
     form = RolenameForm()
     if form.validate_on_submit():
-        rolename = Rolename.query.filter_by(role_name=form.role_name.data).first()
+        rolename = Rolename.query.filter_by(
+            role_name=form.role_name.data).first()
         if rolename:
-           flash('thid Role already exist','danger')
-           return render_template('new_role.html', form=form)
+            flash('thid Role already exist', 'danger')
+            return render_template('new_role.html', form=form)
         else:
             rolename = Rolename(role_name=form.role_name.data)
             db.session.add(rolename)
@@ -293,7 +315,7 @@ def role_delete(role_id):
     user_role = Role.query.filter_by(rolename_id=role_id).first()
     print(user_role)
     if user_role:
-        flash('this Role assigned to user','danger')
+        flash('this Role assigned to user', 'danger')
         return render_template('rolenamedetail.html', form=role)
     else:
         db.session.delete(role)

@@ -45,7 +45,8 @@ class Event(db.Model):
     description = db.Column(db.String(120), nullable=False)
     startdate = db.Column(db.DateTime, nullable=False,
                           default=datetime.datetime.now)
-    enddate = db.Column(db.Text, nullable=False)
+    enddate = db.Column(db.DateTime, nullable=False,
+                          default=datetime.datetime.now)
     capacity = db.Column(db.Integer, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 

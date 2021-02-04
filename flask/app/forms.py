@@ -66,12 +66,13 @@ class CreateEventForm(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     startdate = DateField('Start date', format='%Y-%m-%d')
     enddate = DateField('End date', format='%Y-%m-%d')
-    capacity = StringField('Capacity', validators=[DataRequired()])
+    capacity = IntegerField('Capacity', validators=[DataRequired()])
 
-    # def validate_event(self, event):
-    #     event = Event.query.filter_by(name=event).first()
-    #     if event:
-    #         raise ValidationError('the event name is already exist.')
+    def validate_event(self, event):
+        print('sdgolsiadjfsejdfliauhsdfiouhaedsuifhasduyfasdyu')
+        event = Event.query.filter_by(name=event).first()
+        if event:
+            raise ValidationError('the event name is already exist.')
 
 ###################################################         Role Name       #############################################################
 
