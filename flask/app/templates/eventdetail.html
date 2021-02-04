@@ -4,14 +4,15 @@
 
 
 
-<h3> Event name: <small> {{ form.name }}</small></h3> 
+<h3> Event name: <small> {{ form.name }}</small></h3>
 
 
 <hr />
 
 
-<form action="" method="post">
-    <div class="container">
+
+<div class="container">
+    <form action="" method="post">
         <div class="row">
             <div class="col-3">
                 <h4>event name</h4>
@@ -49,25 +50,37 @@
             <div class="col-sm">
                 {{ form.capacity }}
             </div>
-           
+
             <div class="col-sm">
                 {{ form.eventowner.username }}
             </div>
         </div>
+    </form>
+
+    <hr />
+
+    {% if current_user.username == 'admin' %}
+
+    <div class="row">
+        <div class="col-1">
+            <a href="{{ url_for('event') }}" class="btn btn-dark"> Back </a>
+        </div class="col-1">
+        <div>
+            <a href="{{ url_for('delete', event_id=form.id) }}" class="btn btn-secondary">Delete</a>
+        </div>
+        <div class="col-1">
+            <a href="{{ url_for('update', event_id=form.id) }}" class="btn btn-secondary">Update</a>
+        </div>
     </div>
-</form>
-
-<hr />
-
-{% if  current_user.username == 'admin' %}
-
-<a href="{{ url_for('delete', event_id=form.id) }}" class="btn btn-secondary">Delete</a>
-<a href="{{ url_for('update', event_id=form.id) }}" class="btn btn-secondary">Update</a>
-<br>
-<br>
-<small> Note: admin and event owner can edit this information </small>
-{% endif %}
-
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-12">
+            <small> Note: admin and event owner can edit this information </small>
+        </div>
+    </div>
+    {% endif %}
+</div>
 
 
 {% endblock %}

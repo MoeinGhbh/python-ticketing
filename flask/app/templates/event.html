@@ -48,21 +48,22 @@
     {% endfor %}
 
     <div class="row">
-        <div>
-           
-            <a href="{{ url_for('paging' , move=-1) }}" class="btn btn-secondary">  Previous </a>
+        <div class="col-1">
+
+            <a href="{{ url_for('paging' , move=-1) }}" class="btn btn-secondary"> Previous </a>
         </div>
-        <div class="col=3">
-            <a href="{{ url_for('paging' , move=1) }}" class="btn btn-secondary">  Next </a>
+        <div class="col-1">
+            <a href="{{ url_for('paging' , move=1) }}" class="btn btn-secondary"> Next </a>
         </div>
     </div>
 
 </div>
 {% if current_user.is_authenticated %}
 {% if form.username == current_user.username or current_user.username == 'admin' %}
-            <a href="{{ url_for('new_event') }}" class="btn btn-secondary">create new event</a>
-           
-            <small> Note: admin and event owner can edit this information </small>
+<a href="{{ url_for('new_event') }}" class="btn btn-secondary">create new event</a>
+<br>
+<br>
+<small> Note: admin and event owner can edit this information </small>
 {% endif %}
 {% endif %}
 {% endblock %}
