@@ -59,7 +59,7 @@
 
 <hr />
 
-{% if form.eventowner == 'event_owner' or current_user.username == 'admin' %}
+{% if  current_user.username == 'admin' %}
 
 <a href="{{ url_for('delete', event_id=form.id) }}" class="btn btn-secondary">Delete</a>
 <a href="{{ url_for('update', event_id=form.id) }}" class="btn btn-secondary">Update</a>

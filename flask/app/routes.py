@@ -192,10 +192,10 @@ def event():
     return render_template('event.html', form=eventform)
 
 
-
-
-page_siz =5 
+page_siz = 5
 page = 1
+
+
 @app.route('/event/<float(signed=True):move>/paging', methods=['GET', 'POST'])
 @login_required
 def paging(move):
@@ -257,9 +257,9 @@ def delete(event_id):
 @login_required
 def update(event_id):
     event = Event.query.get_or_404(event_id)
-    print(current_user)
-    if event.author != current_user:
-        abort(403)
+    # print(current_user.username)
+    # if current_user.username == 'admin':
+    #     abort(403)
     form = CreateEventForm()
     if form.validate_on_submit():
         event.name = form.name.data
@@ -270,6 +270,11 @@ def update(event_id):
     elif request.method == 'GET':
         form.name.data = event.name
         form.description.data = event.description
+        form.event_id.data = event.id
+        form.startdate.data = event.startdate
+        form.enddate.data = event.enddate
+        form.capacity.data = event.capacity
+        form.event_owner.data = event.eventowner.username
     return render_template('update.html', form=form)
 
 ############################################### Role Name ######################################################

@@ -1,11 +1,79 @@
 {% extends 'base.html' %}
 {% block content %}
-    <form method="post" action="" >
+
+<div class="container">
+    <div class="row">
+        <div>
+            <h4> Update Event</h4>
+        </div>
+    </div>
+    <hr />
+    <form method="post" action="">
         {{ form.csrf_token }}
 
-        {{ form.title.label(class='form-control-label') }}{{ form.title(class='form-control') }}
-        {{ form.content.label(class='form-control-label') }}{{ form.content(class='form-control') }}
-        <input type="submit" value="save"  class="btn btn-info">
+        <div class="row">
+            <div class="col-2">
+                {{ form.name.label }}
+            </div>
+            <div class="col-4">
+                {{ form.name }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                {{ form.description.label }}
+            </div>
+            <div class="col-4">
 
+                {{ form.description }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                {{ form.startdate.label }}
+            </div>
+            <div class="col-4">
+                {{ form.startdate }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                {{ form.enddate.label}}
+                
+            </div>
+            <div class="col-4">
+                {{ form.enddate }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                {{ form.capacity.label }}
+                
+            </div>
+            <div class="col-4">
+                {{ form.capacity }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                Event Owner
+              
+            </div>
+            <div class="col-4">
+              {{ form.event_owner }}
+            </div>
+        </div>
+       
+
+        <hr />
+        <div class="row">
+            <div class="col-1">
+                <a href="{{ url_for('eventdetail', event_id=form.event_id.data) }}" class="btn btn-dark"> Back </a>
+            </div>
+            <div class="col-1">
+                <input type="submit" value="Update" class="btn btn-secondary">
+            </div>
+        </div>
     </form>
+</div>
 {% endblock %}
