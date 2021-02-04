@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, TextAreaField
 from wtforms.fields.core import IntegerField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from app.models import Role, User
+from app.models import Role, User, Event, Rolename, Participant
 from flask_login import current_user
 from wtforms.fields.html5 import DateField
 
@@ -14,7 +14,7 @@ class RegistrationForm(FlaskForm):
                            )
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('password', validators=[DataRequired(),
-                                                     Length(min=3, max=25)])
+                                                     Length(min=8, max=25)])
     confirm_password = PasswordField('confirm password',
                                      validators=[
                                          DataRequired(), EqualTo('password')]
@@ -44,13 +44,14 @@ class UpdateProfile(FlaskForm):
                            )
 
     def validate_username(self, username):
-        if current_user.username != username.data:
+        # if current_user.username != username.data:
             user = User.query.filter_by(username=username.data).first()
+            print(user)
             if user:
                 raise ValidationError('the user name is already exist.')
 
     def validate_email(self, email):
-        if current_user.email != email.data:
+        # if current_user.email != email.data:
             user = User.query.filter_by(username=email.data).first()
             if user:
                 raise ValidationError('the email is already exist.')
@@ -67,8 +68,10 @@ class CreateEventForm(FlaskForm):
     enddate = DateField('End date', format='%Y-%m-%d')
     capacity = StringField('Capacity', validators=[DataRequired()])
 
-    # def validate_eventname(self, event_name):
-    #     Event.query.filter_by(event_name=event_name)
+    # def validate_event(self, event):
+    #     event = Event.query.filter_by(name=event).first()
+    #     if event:
+    #         raise ValidationError('the event name is already exist.')
 
 ###################################################         Role Name       #############################################################
 

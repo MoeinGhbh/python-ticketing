@@ -4,6 +4,7 @@ from app.forms import CreateEventForm, RegistrationForm, LoginForm, RolenameForm
 from app.models import User, Role, Rolename, Event, Participant
 from app import db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
+import re
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -61,17 +62,21 @@ def userdetail(user_id):
 @app.route('/userdetail/<int:user_id>/update', methods=['GET', 'POST'])
 @login_required
 def user_update(user_id):
-    print(user_id)
     users = User.query.get_or_404(user_id)
-    # if event.author != current_user:
-    #     abort(403)
+    if current_user.username != 'admin':
+        abort(403)
     form = UpdateProfile()
     if request.method == 'POST':
-        users.username = form.username.data
-        users.email = form.email.data
-        db.session.commit()
-        flash('user updated', 'info')
-        return redirect(url_for('userdetail', user_id=users.id))
+        regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+        if re.match(regex, form.email.data):
+            users.username = form.username.data
+            users.email = form.email.data
+            db.session.commit()
+            flash('user updated', 'info')
+            return redirect(url_for('userdetail', user_id=users.id))
+        else:
+            flash('email address is not valid')
+            return redirect(url_for('user_update', user_id=users.id))
     elif request.method == 'GET':
         form.username.data = users.username
         form.email.data = users.email
@@ -83,16 +88,22 @@ def user_update(user_id):
 @login_required
 def user_delete(user_id):
     user = User.query.get_or_404(user_id)
-    # if .author != current_user:
-    #     abort(403)
+    if current_user.username != 'admin':
+        abort(403)
     db.session.delete(user)
-    db.session.commit()
-    flash('user deleted', 'info')
-    return redirect(url_for('users'))
+    try:
+        db.session.commit()
+        flash('user deleted', 'info')
+        return redirect(url_for('users'))
+    except:
+        flash('Can not delete this user', 'danger')
+        return redirect(url_for('userdetail', user_id=user_id))
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def registration():
+    if current_user.username != 'admin':
+        abort(403)
     reg_form = RegistrationForm()
     if reg_form.validate_on_submit():
         hashed_pass = bcrypt.generate_password_hash(
@@ -107,12 +118,15 @@ def registration():
         print('not valid')
     return render_template('registration.html', form=reg_form)
 
-############################################## Role  #####################################################
+############################################## user Role  #####################################################
 
 
 @app.route('/userdetail/<int:user_id>/role')
 @login_required
 def user_role(user_id):
+    print(current_user)
+    if current_user.username != 'admin':
+        abort(403)
     roleform = RoleForm()
     user = User.query.get_or_404(user_id)
     roleform.username = user.username
@@ -120,9 +134,9 @@ def user_role(user_id):
 
     roleform.role.choices = [(rolename.id, rolename.role_name)
                              for rolename in Rolename.query.all()]
-    roleform.role.default = '1' # set admin as defailt value
+    roleform.role.default = '1'  # set admin as defailt value
     roleform.process()
-    
+
     users_roles = Role.query.filter_by(user_id=user_id)
     myRole = ''
     for x in users_roles:
@@ -136,26 +150,36 @@ def user_role(user_id):
 @login_required
 def roles_insert(user_id, role_id):
     roleform = RoleForm()
+    print(request.method)
     if request.method == 'POST' or request.method == 'GET':
         print(user_id, role_id)
-        new_user_role = Role(rolename_id=role_id,user_id=user_id)
-        db.session.add(new_user_role)
-        db.session.commit()
-        flash('new role assigne to the user','success')
-        return redirect(url_for('user_role',user_id=user_id))
-    return render_template('home.html')
+        checkRole = Role.query.filter_by(
+            rolename_id=role_id, user_id=user_id).first()
+        print(checkRole)    
+        if checkRole:
+            flash('This role is already assigned to the user','danger')
+            return redirect(url_for('user_role', user_id=user_id))
+        else:
+            new_user_role = Role(rolename_id=role_id, user_id=user_id)
+            db.session.add(new_user_role)
+            db.session.commit()
+            flash('A new role is assigned to the user', 'success')
+            return redirect(url_for('user_role', user_id=user_id))
 
 
 @app.route('/userdetail/<int:user_id>/<int:role_id>/delete')
 @login_required
 def roles_delete(user_id, role_id):
     print(user_id, role_id)
-    role= Role.query.filter_by(user_id=user_id, rolename_id=role_id).first()
-    db.session.delete(role)
-    db.session.commit()
-    flash('role deleted', 'info')
-    return redirect(url_for('user_role',user_id=user_id))
-    # return render_template('home.html')
+    role = Role.query.filter_by(user_id=user_id, rolename_id=role_id).first()
+    if role:
+        db.session.delete(role)
+        db.session.commit()
+        flash('role deleted', 'info')
+        return redirect(url_for('user_role', user_id=user_id))
+    else:
+        flash('this role does not exist', 'danger')
+        return redirect(url_for('user_role', user_id=user_id))
 
 
 ############################################## Event  #####################################################
@@ -199,6 +223,7 @@ def new_event():
 @login_required
 def delete(event_id):
     event = Event.query.get_or_404(event_id)
+    print(current_user)
     if event.author != current_user:
         abort(403)
     db.session.delete(event)
@@ -211,6 +236,7 @@ def delete(event_id):
 @login_required
 def update(event_id):
     event = Event.query.get_or_404(event_id)
+    print(current_user)
     if event.author != current_user:
         abort(403)
     form = CreateEventForm()
@@ -247,11 +273,16 @@ def rolenamedetail(rolename_id):
 def new_rolename():
     form = RolenameForm()
     if form.validate_on_submit():
-        rolename = Rolename(role_name=form.role_name.data)
-        db.session.add(rolename)
-        db.session.commit()
-        flash('Role created', 'info')
-        return redirect(url_for('rolename'))
+        rolename = Rolename.query.filter_by(role_name=form.role_name.data).first()
+        if rolename:
+           flash('thid Role already exist','danger')
+           return render_template('new_role.html', form=form)
+        else:
+            rolename = Rolename(role_name=form.role_name.data)
+            db.session.add(rolename)
+            db.session.commit()
+            flash('Role created', 'info')
+            return redirect(url_for('rolename'))
     return render_template('new_role.html', form=form)
 
 
@@ -259,10 +290,16 @@ def new_rolename():
 @login_required
 def role_delete(role_id):
     role = Rolename.query.get_or_404(role_id)
-    db.session.delete(role)
-    db.session.commit()
-    flash('role deleted', 'info')
-    return redirect(url_for('rolename'))
+    user_role = Role.query.filter_by(rolename_id=role_id).first()
+    print(user_role)
+    if user_role:
+        flash('this Role assigned to user','danger')
+        return render_template('rolenamedetail.html', form=role)
+    else:
+        db.session.delete(role)
+        db.session.commit()
+        flash('The Role deleted', 'info')
+        return redirect(url_for('rolename'))
 
 
 @app.route('/rolenamedetail/<int:role_id>/update', methods=['GET', 'POST'])

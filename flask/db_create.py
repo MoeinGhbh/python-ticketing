@@ -5,7 +5,7 @@ from app import db, bcrypt
 db.create_all()
 
 hashed_pass = bcrypt.generate_password_hash('123').decode('utf-8')
-new_user = User(username='administrator', email='admin@vriday.net', password=hashed_pass)
+new_user = User(username='admin', email='admin@vriday.net', password=hashed_pass)
 db.session.add(new_user)
 db.session.commit()
 
