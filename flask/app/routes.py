@@ -257,10 +257,13 @@ def delete(event_id):
 @login_required
 def update(event_id):
     event = Event.query.get_or_404(event_id)
+    print(event.user_id)
     # print(current_user.username)
     # if current_user.username == 'admin':
     #     abort(403)
     form = CreateEventForm()
+    
+    
     if request.method=='POST':
         event.name = form.name.data
         event.description = form.description.data
@@ -272,13 +275,22 @@ def update(event_id):
         flash('event updated', 'info')
         return redirect(url_for('eventdetail', event_id=event.id))
     elif request.method == 'GET':
+        ########   make user dropdown 
+        user = User.query.all()
+        form.users.choices = [(users.id, users.username)
+                             for users in User.query.all()]
+        form.users.default = event.user_id
+        form.process()
+        ########
         form.name.data = event.name
         form.description.data = event.description
         form.event_id.data = event.id
         form.startdate.data = event.startdate
         form.enddate.data = event.enddate
         form.capacity.data = event.capacity
-        form.event_owner.data = event.eventowner.username
+        
+        # form.event_owner.data = event.eventowner.username
+        # print(form.name.data)
         return render_template('update.html', form=form)
 
 ############################################### Role Name ######################################################

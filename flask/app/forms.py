@@ -68,6 +68,7 @@ class CreateEventForm(FlaskForm):
     enddate = DateField('End date', format='%Y-%m-%d')
     capacity = IntegerField('Capacity', validators=[DataRequired()])
     event_owner = StringField('Event Owner')
+    users = SelectField('Users')
 
     def validate_event(self, event):
         print('sdgolsiadjfsejdfliauhsdfiouhaedsuifhasduyfasdyu')
