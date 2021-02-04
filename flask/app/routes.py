@@ -245,8 +245,8 @@ def new_event():
 def delete(event_id):
     event = Event.query.get_or_404(event_id)
     print(current_user)
-    if event.author != current_user:
-        abort(403)
+    # if event.author != current_user:
+    #     abort(403)
     db.session.delete(event)
     db.session.commit()
     flash('event deleted', 'info')
@@ -261,12 +261,16 @@ def update(event_id):
     # if current_user.username == 'admin':
     #     abort(403)
     form = CreateEventForm()
-    if form.validate_on_submit():
+    if request.method=='POST':
         event.name = form.name.data
         event.description = form.description.data
+        event.startdate = form.startdate.data
+        event.enddate = form.enddate.data
+        event.capacity = form.capacity.data
+        event.user_id = 1   ##############    should change after make dropdown list of user
         db.session.commit()
         flash('event updated', 'info')
-        return redirect(url_for('detail', event_id=event.id))
+        return redirect(url_for('eventdetail', event_id=event.id))
     elif request.method == 'GET':
         form.name.data = event.name
         form.description.data = event.description
@@ -275,7 +279,7 @@ def update(event_id):
         form.enddate.data = event.enddate
         form.capacity.data = event.capacity
         form.event_owner.data = event.eventowner.username
-    return render_template('update.html', form=form)
+        return render_template('update.html', form=form)
 
 ############################################### Role Name ######################################################
 
