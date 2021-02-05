@@ -46,12 +46,22 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-3">{{ form.capacity.label(class='form-control-label') }}</div>
-            <div class="col-3"> {{ form.capacity(class='form-control') }}</div>
+            <div class="col-3">
+                {{ form.capacity.label(class='form-control-label') }}
+            </div>
+            <div class="col-3">
+                {{ form.capacity(class='form-control') }}
+            </div>
         </div>
         <hr />
-        <input type="submit" value="add new event" class="btn btn-secondary">
+        <div class="row">
+            <div class="col-1">
+                <a href="{{ url_for('event') }}" class="btn btn-dark">Back</a>
+            </div>
+            <div class="col-1">
+                <input type="submit" value="add new event" class="btn btn-secondary">
+            </div>
+        </div>
     </div>
 </form>
-
 {% endblock %}

@@ -215,6 +215,27 @@ def paging(move):
     eventform = eventform[first:]
     return render_template('event.html', form=eventform)
 
+homepage_siz = 5
+homepage = 1
+@app.route('/<float(signed=True):move>/homepaging', methods=['GET', 'POST'])
+@login_required
+def homePaging(move):
+    global homepage_siz
+    global homepage
+    all = Event.query.all()
+    MaxPage = round(len(all)/5)
+    if move == 1:
+        if homepage < MaxPage:
+            homepage += 1
+    else:
+        if homepage > 1:
+            homepage -= 1
+    end = homepage * homepage_siz
+    first = (homepage * homepage_siz)-5
+    eventform = Event.query.limit(end).all()
+    eventform = eventform[first:]
+    return render_template('home.html', form=eventform)
+
 
 @app.route('/event/<int:event_id>', methods=['GET', 'POST'])
 def eventdetail(event_id):
@@ -262,7 +283,7 @@ def update(event_id):
     # if current_user.username == 'admin':
     #     abort(403)
     form = CreateEventForm()
-    
+    print('form.users.data', form.users.data)
     
     if request.method=='POST':
         event.name = form.name.data
@@ -270,7 +291,7 @@ def update(event_id):
         event.startdate = form.startdate.data
         event.enddate = form.enddate.data
         event.capacity = form.capacity.data
-        event.user_id = 1   ##############    should change after make dropdown list of user
+        event.user_id = form.users.data
         db.session.commit()
         flash('event updated', 'info')
         return redirect(url_for('eventdetail', event_id=event.id))
@@ -288,9 +309,6 @@ def update(event_id):
         form.startdate.data = event.startdate
         form.enddate.data = event.enddate
         form.capacity.data = event.capacity
-        
-        # form.event_owner.data = event.eventowner.username
-        # print(form.name.data)
         return render_template('update.html', form=form)
 
 ############################################### Role Name ######################################################
