@@ -271,7 +271,7 @@ def delete(event_id):
     db.session.delete(event)
     db.session.commit()
     flash('event deleted', 'info')
-    return redirect(url_for('home'))
+    return redirect(url_for('event'))
 
 
 @app.route('/event/<int:event_id>/update', methods=['GET', 'POST'])
