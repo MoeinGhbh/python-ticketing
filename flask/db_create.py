@@ -17,7 +17,9 @@ new_role = Role(rolename_id=1,user_id=1)
 db.session.add(new_role)
 db.session.commit()
 
-
+new_rolename = Rolename(role_name='event_owner')
+db.session.add(new_rolename)
+db.session.commit()
 
 
 print("DB created.")

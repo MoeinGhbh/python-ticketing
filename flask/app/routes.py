@@ -187,7 +187,6 @@ def roles_delete(user_id, role_id):
 @app.route('/event', methods=['GET', 'POST'])
 @login_required
 def event():
-    # eventform = CreateEventForm()
     eventform = Event.query.limit(5).all()
     return render_template('event.html', form=eventform)
 
@@ -390,59 +389,82 @@ def role_update(role_id):
 ###########################################        participants        ####################################
 
 
-@app.route('/participant', methods=['GET', 'POST'])
+@app.route('/participant/<int:event_id>', methods=['GET', 'POST'])
 @login_required
-def participant():
-    participant = Participant.query.all()
-    print(participant)
-    return render_template('participant.html', form=participant)
+def participant(event_id):
+    participant = Participant.query.filter_by(event_id=event_id)
+    event_name = ''
+    if Event.query.filter_by(id=event_id).first():
+        event_name = Event.query.filter_by(id=event_id).first().name
+    return render_template('participant.html', form=participant, event_id=event_id, name=event_name)
 
 
-@app.route('/participant/<int:participant_id>', methods=['GET', 'POST'])
+@app.route('/participantDetail/<int:participant_id>/<int:event_id>', methods=['GET', 'POST'])
 @login_required
-def participantDetail(participant_id):
-    participantform = AddParticipantForm()
-    if participantform.validate_on_submit():
-        # current_user.rolename = roleform.role_name.data
-        print('insert participant in data base')
-        flash('your participant insert successfully', 'info')
-        return redirect(url_for('participant'))
-    elif request.method == 'GET':
-        print('hehehe')
-    return render_template('participant.html', form=participantform)
-
-
-@app.route('/new_participant', methods=['POST', 'GET'])
-@login_required
-def new_participant():
+def participantDetail(participant_id, event_id):
     form = AddParticipantForm()
-    regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$' 
+    if request.method== 'POST':
+        regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+        if re.match(regex, str(form.email.data)):
+            participant = Participant.query.get_or_404(participant_id)
+            participant.name = form.name.data
+            participant.email = form.email.data
+            db.session.commit()
+            flash('Participant updated', 'info')
+            return redirect(url_for('participantDetail', participant_id=participant_id, event_id=participant.event_id))
+        else:
+            flash('Please enter valid address', 'danger')
+            return redirect(url_for('participantDetail', participant_id=participant_id, event_id=event_id))   
+    else:
+        participantform = AddParticipantForm()
+        participant = Participant.query.filter_by(
+            id=participant_id, event_id=event_id).first()
+        participantform.name.data = participant.name
+        participantform.email.data = participant.email
+        participantform.event_id.data = event_id
+        participantform.id.data = participant_id
+        return render_template('participant_update.html', form=participantform)
+
+
+@app.route('/new_participant/<int:event_id>/<string:event_name>', methods=['POST', 'GET'])
+@login_required
+def new_participant(event_id, event_name):
+    print(event_id, event_name)
+    form = AddParticipantForm()
+    regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
     if request.method == "POST":
         print('new participants')
         if re.match(regex, str(form.email.data)):
-            ##################### check duplicate
-            check_participant = Participant.query.filter_by(email=form.email.data, event_id = form.events.data).first()
+            check_participant = Participant.query.filter_by(
+                email=form.email.data, event_id=event_id).first()
             if check_participant:
-                flash('this participant already exist','danger')
-                return redirect(url_for('new_participant'))
+                flash('this participant already exist', 'danger')
+                return redirect(url_for('new_participant', event_id=event_id, event_name=event_name))
             else:
-                new_participant = Participant( name=form.name.data , email=form.email.data, event_id = form.events.data )
+                new_participant = Participant(
+                    name=form.name.data, email=form.email.data, event_id=event_id)
                 db.session.add(new_participant)
                 db.session.commit()
                 flash('Participante successfully added', 'info')
-                return redirect(url_for('participant'))
+                return redirect(url_for('participant', event_id=event_id))
         else:
             flash('please enter valid email address', 'danger')
-            return redirect(url_for('new_participant'))
+            return redirect(url_for('new_participant', event_id=event_id, event_name=event_name))
     else:
-        form.events.choices = [(event.id, event.name)
-                             for event in Event.query.all()]
-        form.events.default = 1 # Event.query.all().first()
-        form.process()
+        form.event_name.data = event_name
     return render_template('new_participant.html', form=form)
 
 
-
+# @app.route('/participantDetail/<int:participant_id>/update', methods=['GET', 'POST'])
+# @login_required
+# def participant_update(participant_id):
+#     participant = Participant.query.get_or_404(participant_id)
+#     form = AddParticipantForm()
+#     participant.name = form.name.data
+#     participant.email = form.email.data
+#     db.session.commit()
+#     flash('Participant updated', 'info')
+#     return redirect(url_for('participantDetail', participant_id=participant_id, event_id=participant.event_id))
 
 ###########################################        Send Email        ####################################
 

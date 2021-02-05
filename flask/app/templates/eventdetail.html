@@ -64,12 +64,18 @@
     <div class="row">
         <div class="col-1">
             <a href="{{ url_for('event') }}" class="btn btn-dark"> Back </a>
-        </div class="col-1">
-        <div>
+        </div>
+        <div class="col-1">
             <a href="{{ url_for('delete', event_id=form.id) }}" class="btn btn-secondary">Delete</a>
         </div>
         <div class="col-1">
             <a href="{{ url_for('update', event_id=form.id) }}" class="btn btn-secondary">Update</a>
+        </div>
+        <div class="col-2">
+            <a href="{{ url_for('participant', event_id=form.id) }}" class="btn btn-secondary">Edit Participants</a>
+        </div>
+        <div class="col-2">
+            <a href="{{ url_for('sendemail') }}" class="btn btn-secondary">send Email</a>
         </div>
     </div>
     <br>

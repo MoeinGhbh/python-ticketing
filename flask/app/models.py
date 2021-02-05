@@ -49,6 +49,7 @@ class Event(db.Model):
                           default=datetime.datetime.now)
     capacity = db.Column(db.Integer, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    participants = db.relationship('Participant', backref='eventParticipant', lazy=True)
 
     def __repr__(self):
         return f'{self.__class__.__name__}({self.id}, {self.name},{self.description[:30]}, {self.startdate}, {self.enddate},{self.capacity})'

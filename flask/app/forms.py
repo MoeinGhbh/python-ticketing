@@ -98,10 +98,13 @@ class RoleForm(FlaskForm):
 
 
 class AddParticipantForm(FlaskForm):
-    name = StringField('participant email', validators=[DataRequired()])
-    email = StringField('participant email', validators=[
+    id = StringField('id')
+    name = StringField('Participant Name', validators=[DataRequired()])
+    email = StringField('Participant E-mail', validators=[
                         DataRequired(), Email()])
     events = SelectField('event')
+    event_name = StringField('Event Name')
+    event_id = StringField('Event ID')
 
 
 #####################################################      Send Email     ##########################################################

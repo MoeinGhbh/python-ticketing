@@ -10,7 +10,14 @@
 </div>
 
 <form action="" method="POST">
-
+    <div class="row">
+        <div class="col-3">
+            <h4>Event Name</h4>
+        </div>
+        <div class="col-3">
+            <h4> {{ form.event_name }}</h4>
+        </div>
+    </div>
     <hr />
     <div class="container">
         <div class="row">
@@ -20,28 +27,54 @@
             <div class="col-3">
                 <h4>email</h4>
             </div>
+            <div class="col-3">
+                <h4> event name </h4>
+            </div>
         </div>
         {% for participant in form %}
         <div class="row">
             <div class="col-3">
-                <a href="{{ url_for('participantDetail', participant_id=participant.id) }}" class="card-body">{{
+                <a href="{{ url_for('participantDetail', participant_id=participant.id , event_id=event_id) }}" class="card-body">{{
                     participant.name }}</a>
             </div>
             <div class="col-3">
                 {{ participant.email }}
             </div>
+            <div class="col-3">
+                {{ participant.eventParticipant.name }}
+            </div>
         </div>
         {% endfor %}
+        <hr />
+
+
+        <div class="row">
+            <div class="col-1">
+                <a href="{{ url_for('eventdetail', event_id=event_id) }}" class="btn btn-dark">
+                    Back</a>
+            </div>
+            <div class="col-2">
+                {% if current_user.is_authenticated %}
+                {% if form.username == current_user.username or current_user.username == 'admin' %}
+                <a href="{{ url_for('new_participant', event_id=event_id, event_name=name) }}"
+                    class="btn btn-secondary">add participant</a>
+
+
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col=3">
+                <small> Note: admin and event owner can edit this information </small>
+            </div>
+
+        </div>
     </div>
-    <hr />
-    {% if current_user.is_authenticated %}
-    {% if form.username == current_user.username or current_user.username == 'admin' %}
-    <a href="{{ url_for('new_participant') }}" class="btn btn-secondary">create new participant</a>
-    <br>
-    <br>
-    <small> Note: admin and event owner can edit this information </small>
-    {% endif %}
-    {% endif %}
+
+
 
 
 </form>
