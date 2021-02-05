@@ -2,13 +2,16 @@
 
 {% block content %}
 
+<div class="container">
+    <div class="row">
+        <div class="col-1"></div>
+        <h3> Define Participant </h3>
+    </div>
+</div>
 
-
-<h3> Define Participant </h3>
-<hr />
 <form action="" method="POST">
 
-
+    <hr />
     <div class="container">
         <div class="row">
             <div class="col-3">
@@ -31,11 +34,16 @@
         {% endfor %}
     </div>
     <hr />
-    <input type="submit" value="add new participant" class="btn btn-secondary">
-    <hr />
-    <small>Note: admin and event owner can edit this information</small>
-    
+    {% if current_user.is_authenticated %}
+    {% if form.username == current_user.username or current_user.username == 'admin' %}
+    <a href="{{ url_for('new_participant') }}" class="btn btn-secondary">create new participant</a>
+    <br>
+    <br>
+    <small> Note: admin and event owner can edit this information </small>
+    {% endif %}
+    {% endif %}
+
 
 </form>
-
+</div>
 {% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+                <h4> Add Participants </h4>
+        </div>
+    </div>
+</div>
+<hr />
+<form action="" method="POST">
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            select event
+        </div>
+        <div class="col-3">
+            {{ form.events }}
+        </div>
+    </div>
+    <hr />
+
+    <div class="row">
+        <div class="col-3">
+           Participant Name
+        </div>
+        <div class="col-3">
+            {{ form.name}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3">
+           e-mail address
+        </div>
+        <div class="col-3">
+            {{ form.email}}
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-1">
+            <a href="{{ url_for('participant') }}" class="btn btn-dark"> Back </a>
+        </div>
+        <div class="col-1">
+            <input type="submit" value="add participant" class="btn btn-secondary">
+        </div>
+    </div>
+</div>
+</form>
+
+{% endblock %}

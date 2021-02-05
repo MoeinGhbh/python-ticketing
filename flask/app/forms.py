@@ -101,6 +101,7 @@ class AddParticipantForm(FlaskForm):
     name = StringField('participant email', validators=[DataRequired()])
     email = StringField('participant email', validators=[
                         DataRequired(), Email()])
+    events = SelectField('event')
 
 
 #####################################################      Send Email     ##########################################################

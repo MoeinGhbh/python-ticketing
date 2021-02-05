@@ -203,8 +203,8 @@ def paging(move):
     global page
     all = Event.query.all()
     MaxPage = (len(all)//5)
-    if (len(all)%5) >0:
-        MaxPage+=1
+    if (len(all) % 5) > 0:
+        MaxPage += 1
     if move == 1:
         if page < MaxPage:
             page += 1
@@ -217,8 +217,11 @@ def paging(move):
     eventform = eventform[first:]
     return render_template('event.html', form=eventform)
 
+
 homepage_siz = 5
 homepage = 0
+
+
 @app.route('/<float(signed=True):move>/homepaging', methods=['GET', 'POST'])
 @login_required
 def homePaging(move):
@@ -226,8 +229,8 @@ def homePaging(move):
     global homepage
     all = Event.query.all()
     MaxPage = (len(all)//5)
-    if (len(all)%5) >0:
-        MaxPage+=1
+    if (len(all) % 5) > 0:
+        MaxPage += 1
     if move == 1:
         if homepage < MaxPage:
             homepage += 1
@@ -290,8 +293,8 @@ def update(event_id):
     #     abort(403)
     form = CreateEventForm()
     print('form.users.data', form.users.data)
-    
-    if request.method=='POST':
+
+    if request.method == 'POST':
         event.name = form.name.data
         event.description = form.description.data
         event.startdate = form.startdate.data
@@ -302,10 +305,10 @@ def update(event_id):
         flash('event updated', 'info')
         return redirect(url_for('eventdetail', event_id=event.id))
     elif request.method == 'GET':
-        ########   make user dropdown 
+        # make user dropdown
         user = User.query.all()
         form.users.choices = [(users.id, users.username)
-                             for users in User.query.all()]
+                              for users in User.query.all()]
         form.users.default = event.user_id
         form.process()
         ########
@@ -391,6 +394,7 @@ def role_update(role_id):
 @login_required
 def participant():
     participant = Participant.query.all()
+    print(participant)
     return render_template('participant.html', form=participant)
 
 
@@ -406,6 +410,38 @@ def participantDetail(participant_id):
     elif request.method == 'GET':
         print('hehehe')
     return render_template('participant.html', form=participantform)
+
+
+@app.route('/new_participant', methods=['POST', 'GET'])
+@login_required
+def new_participant():
+    form = AddParticipantForm()
+    regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$' 
+    if request.method == "POST":
+        print('new participants')
+        if re.match(regex, str(form.email.data)):
+            ##################### check duplicate
+            check_participant = Participant.query.filter_by(email=form.email.data, event_id = form.events.data).first()
+            if check_participant:
+                flash('this participant already exist','danger')
+                return redirect(url_for('new_participant'))
+            else:
+                new_participant = Participant( name=form.name.data , email=form.email.data, event_id = form.events.data )
+                db.session.add(new_participant)
+                db.session.commit()
+                flash('Participante successfully added', 'info')
+                return redirect(url_for('participant'))
+        else:
+            flash('please enter valid email address', 'danger')
+            return redirect(url_for('new_participant'))
+    else:
+        form.events.choices = [(event.id, event.name)
+                             for event in Event.query.all()]
+        form.events.default = 1 # Event.query.all().first()
+        form.process()
+    return render_template('new_participant.html', form=form)
+
+
 
 
 ###########################################        Send Email        ####################################
