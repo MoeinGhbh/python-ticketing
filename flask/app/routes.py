@@ -398,34 +398,6 @@ def participant(event_id):
         event_name = Event.query.filter_by(id=event_id).first().name
     return render_template('participant.html', form=participant, event_id=event_id, name=event_name)
 
-
-@app.route('/participantDetail/<int:participant_id>/<int:event_id>', methods=['GET', 'POST'])
-@login_required
-def participantDetail(participant_id, event_id):
-    form = AddParticipantForm()
-    if request.method== 'POST':
-        regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
-        if re.match(regex, str(form.email.data)):
-            participant = Participant.query.get_or_404(participant_id)
-            participant.name = form.name.data
-            participant.email = form.email.data
-            db.session.commit()
-            flash('Participant updated', 'info')
-            return redirect(url_for('participantDetail', participant_id=participant_id, event_id=participant.event_id))
-        else:
-            flash('Please enter valid address', 'danger')
-            return redirect(url_for('participantDetail', participant_id=participant_id, event_id=event_id))   
-    else:
-        participantform = AddParticipantForm()
-        participant = Participant.query.filter_by(
-            id=participant_id, event_id=event_id).first()
-        participantform.name.data = participant.name
-        participantform.email.data = participant.email
-        participantform.event_id.data = event_id
-        participantform.id.data = participant_id
-        return render_template('participant_update.html', form=participantform)
-
-
 @app.route('/new_participant/<int:event_id>/<string:event_name>', methods=['POST', 'GET'])
 @login_required
 def new_participant(event_id, event_name):
@@ -454,17 +426,41 @@ def new_participant(event_id, event_name):
         form.event_name.data = event_name
     return render_template('new_participant.html', form=form)
 
+@app.route('/participantDetail/<int:participant_id>/<int:event_id>', methods=['GET', 'POST'])
+@login_required
+def participantDetail(participant_id, event_id):
+    form = AddParticipantForm()
+    print(request.method)
+    if request.method== 'POST':
+        regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+        if re.match(regex, str(form.email.data)):
+            participant = Participant.query.get_or_404(participant_id)
+            participant.name = form.name.data
+            participant.email = form.email.data
+            db.session.commit()
+            flash('Participant updated', 'info')
+            return redirect(url_for('participantDetail', participant_id=participant_id, event_id=participant.event_id))
+        else:
+            flash('Please enter valid address', 'danger')
+            return redirect(url_for('participantDetail', participant_id=participant_id, event_id=event_id))   
+    else:
+        participantform = AddParticipantForm()
+        participant = Participant.query.filter_by(
+            id=participant_id, event_id=event_id).first()
+        participantform.name.data = participant.name
+        participantform.email.data = participant.email
+        participantform.event_id.data = event_id
+        participantform.id.data = participant_id
+        return render_template('participant_update.html', form=participantform)
 
-# @app.route('/participantDetail/<int:participant_id>/update', methods=['GET', 'POST'])
-# @login_required
-# def participant_update(participant_id):
-#     participant = Participant.query.get_or_404(participant_id)
-#     form = AddParticipantForm()
-#     participant.name = form.name.data
-#     participant.email = form.email.data
-#     db.session.commit()
-#     flash('Participant updated', 'info')
-#     return redirect(url_for('participantDetail', participant_id=participant_id, event_id=participant.event_id))
+@app.route('/participantDetail/<int:participant_id>/delete', methods=['GET', 'POST'])
+@login_required
+def participant_delete(participant_id):
+    participant = Participant.query.get_or_404(participant_id)
+    db.session.delete(participant)
+    db.session.commit()
+    flash('Participant delete', 'info')
+    return redirect(url_for('participantDetail', participant_id=participant_id, event_id=participant.event_id))
 
 ###########################################        Send Email        ####################################
 
