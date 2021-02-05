@@ -193,7 +193,7 @@ def event():
 
 
 page_siz = 5
-page = 1
+page = 0
 
 
 @app.route('/event/<float(signed=True):move>/paging', methods=['GET', 'POST'])
@@ -202,7 +202,9 @@ def paging(move):
     global page_siz
     global page
     all = Event.query.all()
-    MaxPage = round(len(all)/5)
+    MaxPage = (len(all)//5)
+    if (len(all)%5) >0:
+        MaxPage+=1
     if move == 1:
         if page < MaxPage:
             page += 1
@@ -216,14 +218,16 @@ def paging(move):
     return render_template('event.html', form=eventform)
 
 homepage_siz = 5
-homepage = 1
+homepage = 0
 @app.route('/<float(signed=True):move>/homepaging', methods=['GET', 'POST'])
 @login_required
 def homePaging(move):
     global homepage_siz
     global homepage
     all = Event.query.all()
-    MaxPage = round(len(all)/5)
+    MaxPage = (len(all)//5)
+    if (len(all)%5) >0:
+        MaxPage+=1
     if move == 1:
         if homepage < MaxPage:
             homepage += 1
@@ -234,6 +238,8 @@ def homePaging(move):
     first = (homepage * homepage_siz)-5
     eventform = Event.query.limit(end).all()
     eventform = eventform[first:]
+    print(first)
+    print(end)
     return render_template('home.html', form=eventform)
 
 
@@ -255,7 +261,7 @@ def new_event():
             db.session.add(event)
             db.session.commit()
             flash('event created', 'info')
-            return redirect(url_for('home'))
+            return redirect(url_for('event'))
     else:
         flash('please enter number', 'danger')
         return render_template('create_event.html', form=form)
