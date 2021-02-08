@@ -408,23 +408,20 @@ def participant(event_id):
 @login_required
 def participantDetail(participant_id, event_id):
     form = AddParticipantForm()
-    participant = Participant.query.filter_by(id=participant_id, event_id=event_id).first()
-    # form.name.data = participant.name
-    # form.email.data = participant.email
-    # form.id.data = participant_id
-    # form.event_id.data = event_id
-    return render_template('participantdetail.html', form = participant , participant_id=participant_id,event_id= event_id )
-
+    participant = Participant.query.filter_by(
+        id=participant_id, event_id=event_id).first()
+    return render_template('participantdetail.html', form=participant, participant_id=participant_id, event_id=event_id)
 
 
 @app.route('/participantDetail/<int:participant_id>/delete', methods=['GET', 'POST'])
 @login_required
 def participant_delete(participant_id):
+    print(participant_id)
     participant = Participant.query.get_or_404(participant_id)
     db.session.delete(participant)
     db.session.commit()
     flash('Participant delete', 'info')
-    return redirect(url_for('participantDetail', participant_id=participant_id, event_id=participant.event_id))
+    return redirect(url_for('participant',  event_id=participant.event_id))
 
 
 @app.route('/participantDetail/<int:participant_id>/update', methods=['GET', 'POST'])
