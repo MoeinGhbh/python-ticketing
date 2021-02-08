@@ -35,7 +35,7 @@
                 <a href="{{ url_for('participant', event_id=form.event_id.data ) }}" class="btn btn-dark">Back</a>
             </div>
             <div class="col-1">
-               
+                <a href="{{ url_for('participant_delete', participant_id=form.event_id.data ) }}" class="btn btn-secondary">Delete</a>
             </div>
             <div class="col-1">
                 <input type="submit" value="Update" class="btn btn-secondary">
@@ -44,5 +44,4 @@
     </div>
 </form>
 
-<a href="{{ url_for('participant_delete', participant_id=form.event_id.data ) }}" class="btn btn-secondary">Delete</a>
 {% endblock %}

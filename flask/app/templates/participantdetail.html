@@ -1,9 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h4> {{ form.name.label }} </h4>
+        </div>
+    </div>
+</div>
 
-<h3> {{ form.name }} </h3>
 
+<hr />
 <form action="" method="POST">
     <div class="container">
         <div class="row">
@@ -11,28 +18,24 @@
                 <h4> participant name </h4>
             </div>
             <div class="col-3">
-                <h4> participant email </h4>
+                <small>{{ form.name }} </small>
             </div>
         </div>
         <div class="row">
             <div class="col-3">
-                <small>{{ form.name }} </small>
+                <h4> participant email </h4>
             </div>
             <div class="col-3">
                 <small>{{ form.email }} </small>
             </div>
         </div>
+        <hr />
+        {% if current_user.username == 'admin' %}
+            <a href="{{ url_for('participant', event_id=event_id) }}" class="btn btn-dark">Back</a>
+            <a href="" class="btn btn-secondary">Delete</a>
+            <a href="" class="btn btn-secondary">Update</a>
+        {% endif %}
     </div>
 
 </form>
-
-<hr />
-{% if form.eventowner.username == current_user.username or current_user.username == 'admin' %}
-<a href="{{ url_for('delete', participant_id=form.id) }}" class="btn btn-dark">Delete</a>
-<a href="{{ url_for('update', participant_id=form.id) }}" class="btn btn-secondary">Update</a>
-{% endif %}
-
-
-<hr />
-<small> Note: admin and event owner can edit this information </small>
 {% endblock %}
