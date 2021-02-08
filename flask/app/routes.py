@@ -5,6 +5,7 @@ from app.models import User, Role, Rolename, Event, Participant
 from app import db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 import re
+from app.send_email import SendEmail
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -483,7 +484,19 @@ def new_participant(event_id, event_name):
 ###########################################        Send Email        ####################################
 
 
-@app.route('/sendemail', methods=['GET', 'POST'])
+@app.route('/sendemail/<int:event_id>', methods=['GET', 'POST'])
 @login_required
-def sendemail():
-    return render_template('sendemail.html')
+def sendemail(event_id):
+    participant = Participant.query.filter_by(event_id=event_id)
+    if request.method == "GET":
+        return render_template('sendemail.html', form=participant, recent_event_id=event_id)
+    else:
+        try:
+            for parti in participant:
+                sendEmail =  SendEmail(parti.email)
+                sendEmail.send()
+            flash('email successfully sent','info')
+            return redirect(url_for('sendemail',event_id=event_id))
+        except:
+            flash('sending emails crash')
+            return redirect(url_for('sendemail',event_id=event_id))

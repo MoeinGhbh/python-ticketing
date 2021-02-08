@@ -1,13 +1,54 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <h3>send emails to pariticipants</h3>
-    <form method="GET" action="">
 
-    
-        
-        <input type="submit" value="Send" class="btn btn-dark">
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h3>Send emails include unique ID to pariticipants</h3>
+        </div>
+    </div>
+</div>
+<form method="POST" action="">
+    <div class="container">
+        <div class="row">
+            <div class="col-3">
+                <h5> Participant Name </h5>
+            </div>
+            <div class="col-3">
+                <h5> Participant email address </h5>
+            </div>
+        </div>
+        {% for participant in form %}
+        <div class="row">
+            <div class="col-3">
+                {{ participant.name }}
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    {{ participant.email }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 
-    </form>
+    <hr />
+    <div class="container">
+        <div class="row">
+            <div class="col-1">
+                <a href="{{ url_for('eventdetail', event_id=recent_event_id) }}" class="btn btn-dark">Back</a>
+
+            </div>
+            <div class="col-1">
+                <input type="submit" value="send emails to participants" class="btn btn-secondary">
+            </div>
+        </div>
+    </div>
+
+
+
+
+</form>
 
 {% endblock %}
