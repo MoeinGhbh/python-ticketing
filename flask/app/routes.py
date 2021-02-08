@@ -428,6 +428,7 @@ def new_participant(event_id, event_name):
             return redirect(url_for('new_participant', event_id=event_id, event_name=event_name))
     else:
         form.event_name.data = event_name
+        form.event_id.data = event_id
     return render_template('new_participant.html', form=form)
 
 
