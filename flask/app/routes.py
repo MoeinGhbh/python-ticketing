@@ -488,15 +488,16 @@ def new_participant(event_id, event_name):
 @login_required
 def sendemail(event_id):
     participant = Participant.query.filter_by(event_id=event_id)
+    event = Event.query.filter_by(id=event_id).first()
     if request.method == "GET":
-        return render_template('sendemail.html', form=participant, recent_event_id=event_id)
+        return render_template('sendemail.html', form=participant, recent_event_id=event_id, start_date= event.startdate)
     else:
-        try:
+        # try:
             for parti in participant:
-                sendEmail =  SendEmail(parti.email)
+                sendEmail =  SendEmail(parti.email, parti.name, str(event.startdate), event.name)
                 sendEmail.send()
             flash('email successfully sent','info')
             return redirect(url_for('sendemail',event_id=event_id))
-        except:
-            flash('sending emails crash')
-            return redirect(url_for('sendemail',event_id=event_id))
+        # except:
+        #     flash('sending emails crash')
+        #     return redirect(url_for('sendemail',event_id=event_id))
