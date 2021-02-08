@@ -424,7 +424,7 @@ def participant_delete(participant_id):
     return redirect(url_for('participant',  event_id=participant.event_id))
 
 
-@app.route('/participantDetail/<int:participant_id>/update', methods=['GET', 'POST'])
+@app.route('/participantDetail/<int:participant_id>/<int:event_id>/update', methods=['GET', 'POST'])
 @login_required
 def participant_update(participant_id, event_id):
     form = AddParticipantForm()
@@ -448,7 +448,7 @@ def participant_update(participant_id, event_id):
         participantform.email.data = participant.email
         participantform.event_id.data = event_id
         participantform.id.data = participant_id
-        return render_template('participantdetail.html', form=participantform)
+        return render_template('participant_update.html', form=participantform)
 
 
 @app.route('/new_participant/<int:event_id>/<string:event_name>', methods=['POST', 'GET'])

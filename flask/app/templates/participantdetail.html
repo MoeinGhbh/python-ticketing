@@ -33,7 +33,7 @@
         {% if current_user.username == 'admin' %}
             <a href="{{ url_for('participant', event_id=event_id) }}" class="btn btn-dark">Back</a>
             <a href="{{ url_for('participant_delete', participant_id=form.id) }}" class="btn btn-secondary">Delete</a>
-            <a href="" class="btn btn-secondary">Update</a>
+            <a href="{{ url_for('participant_update', participant_id=form.id, event_id=event_id) }}" class="btn btn-secondary">Update</a>
         {% endif %}
     </div>
 
