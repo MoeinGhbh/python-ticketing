@@ -105,9 +105,6 @@ class AddParticipantForm(FlaskForm):
     events = SelectField('event')
     event_name = StringField('Event Name')
     event_id = StringField('Event ID')
+    participant_type = SelectField('Participant Type')
 
 
-#####################################################      Send Email     ##########################################################
-
-# class sendemailForm(FlaskForm):
-#     allevents = SelectField('event name', choices=['Owner', 'Manager'])

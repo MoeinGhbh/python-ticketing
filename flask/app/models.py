@@ -17,6 +17,15 @@ class Rolename(db.Model, UserMixin):
         return f'{self.__class__.__name__}({self.id},{self.role_name})'
 
 
+class Role(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    rolename_id = db.Column(db.Integer, db.ForeignKey(
+        'rolename.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self.id})'
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -30,15 +39,6 @@ class User(db.Model, UserMixin):
         return f'{self.__class__.__name__}({self.id}, {self.username})'
 
 
-class Role(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    rolename_id = db.Column(db.Integer, db.ForeignKey('rolename.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-    def __repr__(self):
-        return f'{self.__class__.__name__}({self.id})'
-
-
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
@@ -46,20 +46,30 @@ class Event(db.Model):
     startdate = db.Column(db.DateTime, nullable=False,
                           default=datetime.datetime.now)
     enddate = db.Column(db.DateTime, nullable=False,
-                          default=datetime.datetime.now)
+                        default=datetime.datetime.now)
     capacity = db.Column(db.Integer, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    participants = db.relationship('Participant', backref='eventParticipant', lazy=True)
+    participants = db.relationship(
+        'Participant', backref='eventParticipant', lazy=True)
 
     def __repr__(self):
         return f'{self.__class__.__name__}({self.id}, {self.name},{self.description[:30]}, {self.startdate}, {self.enddate},{self.capacity})'
+
+
+class Participanttypes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String, nullable=False)
+    parti = db.relationship(
+        'Participant', backref='ParticipantTypes_id', lazy=True)
 
 
 class Participant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(25), nullable=True)
     email = db.Column(db.String(50), nullable=False)
-    event_id = db.Column(db.ForeignKey('event.id'), nullable=False)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    Participanttypes_id = db.Column(db.Integer, db.ForeignKey(
+        'participanttypes.id'), nullable=False)
 
     def __repr__(self):
         return f'{self.__class__.__name__} ({self.name},{self.email})'

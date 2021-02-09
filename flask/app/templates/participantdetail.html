@@ -29,6 +29,14 @@
                 <small>{{ form.email }} </small>
             </div>
         </div>
+        <div class="row">
+            <div class="col-3">
+                <h4> participant type </h4>
+            </div>
+            <div class="col-3">
+                <small>{{ form.ParticipantTypes_id.type }} </small>
+            </div>
+        </div>
         <hr />
         {% if current_user.username == 'admin' %}
             <a href="{{ url_for('participant', event_id=event_id) }}" class="btn btn-dark">Back</a>

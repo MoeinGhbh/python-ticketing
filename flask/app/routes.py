@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from app import app
 from app.forms import CreateEventForm, RegistrationForm, LoginForm, RolenameForm, UpdateProfile, AddParticipantForm, RoleForm
-from app.models import User, Role, Rolename, Event, Participant
+from app.models import User, Role, Rolename, Event, Participant, Participanttypes
 from app import db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 import re
@@ -401,7 +401,7 @@ def participant(event_id):
     event_name = ''
     if Event.query.filter_by(id=event_id).first():
         event_name = Event.query.filter_by(id=event_id).first().name
-    # @
+    
     return render_template('participant.html', form=participant, event_id=event_id, event_name=event_name)
 
 
@@ -445,6 +445,13 @@ def participant_update(participant_id, event_id):
         participantform = AddParticipantForm()
         participant = Participant.query.filter_by(
             id=participant_id, event_id=event_id).first()
+
+        participanttypes = Participanttypes.query.filter_by(id=participant.Participanttypes_id).first()
+
+        participantform.participant_type.choices = [(types.id , types.type) for types  in Participanttypes.query.all() ]
+        participantform.participant_type.default = participanttypes.id
+        participantform.process()
+
         participantform.name.data = participant.name
         participantform.email.data = participant.email
         participantform.event_id.data = event_id
@@ -457,6 +464,8 @@ def participant_update(participant_id, event_id):
 def new_participant(event_id, event_name):
     print(event_id, event_name)
     form = AddParticipantForm()
+    
+
     regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
     if request.method == "POST":
         print('new participants')
@@ -468,7 +477,7 @@ def new_participant(event_id, event_name):
                 return redirect(url_for('new_participant', event_id=event_id, event_name=event_name))
             else:
                 new_participant = Participant(
-                    name=form.name.data, email=form.email.data, event_id=event_id)
+                    name=form.name.data, email=form.email.data, event_id=event_id, Participanttypes_id=form.participant_type.data)
                 db.session.add(new_participant)
                 db.session.commit()
                 flash('Participante successfully added', 'info')
@@ -477,6 +486,9 @@ def new_participant(event_id, event_name):
             flash('please enter valid email address', 'danger')
             return redirect(url_for('new_participant', event_id=event_id, event_name=event_name))
     else:
+        form.participant_type.choices = [(types.id , types.type) for types  in Participanttypes.query.all() ]
+        form.participant_type.default = 1 # set defaul on prticipant type
+        form.process()
         form.event_name.data = event_name
         form.event_id.data = event_id
     return render_template('new_participant.html', form=form)
@@ -492,12 +504,12 @@ def sendemail(event_id):
     if request.method == "GET":
         return render_template('sendemail.html', form=participant, recent_event_id=event_id, start_date= event.startdate)
     else:
-        # try:
+        try:
             for parti in participant:
                 sendEmail =  SendEmail(parti.email, parti.name, str(event.startdate), event.name)
                 sendEmail.send()
             flash('email successfully sent','info')
             return redirect(url_for('sendemail',event_id=event_id))
-        # except:
-        #     flash('sending emails crash')
-        #     return redirect(url_for('sendemail',event_id=event_id))
+        except:
+            flash('sending emails crash')
+            return redirect(url_for('sendemail',event_id=event_id))
