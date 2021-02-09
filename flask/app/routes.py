@@ -435,6 +435,7 @@ def participant_update(participant_id, event_id):
             participant = Participant.query.get_or_404(participant_id)
             participant.name = form.name.data
             participant.email = form.email.data
+            participant.Participanttypes_id = form.participant_type.data
             db.session.commit()
             flash('Participant updated', 'info')
             return redirect(url_for('participantDetail', participant_id=participant_id, event_id=participant.event_id))
@@ -443,8 +444,7 @@ def participant_update(participant_id, event_id):
             return redirect(url_for('participantDetail', participant_id=participant_id, event_id=event_id))
     else:
         participantform = AddParticipantForm()
-        participant = Participant.query.filter_by(
-            id=participant_id, event_id=event_id).first()
+        participant = Participant.query.filter_by(id=participant_id, event_id=event_id).first()
 
         participanttypes = Participanttypes.query.filter_by(id=participant.Participanttypes_id).first()
 
