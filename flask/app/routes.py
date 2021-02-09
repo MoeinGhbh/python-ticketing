@@ -408,7 +408,7 @@ def participant(event_id):
 @app.route('/participantDetail/<int:participant_id>/<int:event_id>', methods=['GET', 'POST'])
 @login_required
 def participantDetail(participant_id, event_id):
-    form = AddParticipantForm()
+    # form = AddParticipantForm()
     participant = Participant.query.filter_by(
         id=participant_id, event_id=event_id).first()
     return render_template('participantdetail.html', form=participant, participant_id=participant_id, event_id=event_id)

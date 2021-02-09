@@ -1,23 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="container">
-    <div class="row">
-        <div class="col-1"></div>
-        <h3> Define Participant </h3>
-    </div>
-</div>
+
 
 <form action="" method="POST">
     <div class="row">
-        <div class="col-3">
-            <h4>Event Name</h4>
-        </div>
-        <div class="col-3">
-            <h4> {{ form.event_name }}</h4>
+        <div class="col-ms">
+            <h3> Define participant </h3>
         </div>
     </div>
     <hr />
+    <div class="row">
+        <div class="col-ms">
+            <h5>Event name:</h5>
+        </div>
+        <div class="col-2">
+            <h6>  {{ event_name }} </h6>
+        </div>
+    </div>
+  
     <div class="container">
         <div class="row">
             <div class="col-3">
@@ -29,10 +30,8 @@
             <div class="col-3">
                 <h4> Participant type </h4>
             </div>
-            <div class="col-3">
-                <h4> event name </h4>
-            </div>
         </div>
+        <hr />
         {% for participant in form %}
         <div class="row">
             <div class="col-3">
@@ -46,9 +45,9 @@
             <div class="col-3">
                 {{ participant.ParticipantTypes_id.type }}
             </div>
-            <div class="col-3">
-                {{ participant.eventParticipant.name }}
-            </div>
+           <hr />
+               
+           
         </div>
         {% endfor %}
         <hr />
