@@ -68,8 +68,8 @@ class Participant(db.Model):
     name = db.Column(db.String(25), nullable=True)
     email = db.Column(db.String(50), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
-    Participanttypes_id = db.Column(db.Integer, db.ForeignKey(
-        'participanttypes.id'), nullable=False)
+    Participanttypes_id = db.Column(db.Integer, db.ForeignKey('participanttypes.id'), nullable=False)
+    unique_id = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         return f'{self.__class__.__name__} ({self.name},{self.email})'

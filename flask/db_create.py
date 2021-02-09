@@ -1,5 +1,5 @@
 from app import db
-from app.models import User, Event, Role, Rolename
+from app.models import User, Event, Role, Rolename, Participanttypes
 from app import db, bcrypt
 
 db.create_all()
@@ -20,6 +20,16 @@ db.session.commit()
 new_rolename = Rolename(role_name='event_owner')
 db.session.add(new_rolename)
 db.session.commit()
+
+
+new_participanttyps = Participanttypes(type='Participant')
+db.session.add(new_participanttyps)
+db.session.commit()
+
+new_participanttyps_2 = Participanttypes(type='Presenter')
+db.session.add(new_participanttyps_2)
+db.session.commit()
+
 
 
 print("DB created.")

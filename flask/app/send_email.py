@@ -7,7 +7,7 @@ from email.mime.multipart import MIMEMultipart
 
 class SendEmail:
 
-    def __init__(self, receiver_email, reciver_name, startdate, event_name):
+    def __init__(self, receiver_email, reciver_name, startdate, event_name, unique_id):
         self.smtp_server = "smtp.office365.com"
         self.port = 587  # For starttls
         self.sender_email = "m.ghobbeh@vriday.net"
@@ -16,6 +16,7 @@ class SendEmail:
         self.reciver_name = reciver_name
         self.startdate = startdate
         self.event_name = event_name
+        self.unique_id = unique_id
 
         # # Create a secure SSL context
         # context = ssl.create_default_context()
@@ -55,7 +56,7 @@ class SendEmail:
             You invited to join us in NexR Seminar call " """+ self.event_name +""" " on """ + self.startdate + """.<br>
             <a href="https://nexr-seminar.com/">Nexr-seminar</a> 
             has many great experince.<br><br>
-            this is your ID: """ + str(1234) + """<br><br>
+            this is your ID: """ + str(self.unique_id) + """<br><br>
            
             <br>
             <br>

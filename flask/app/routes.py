@@ -4,7 +4,7 @@ from app.forms import CreateEventForm, RegistrationForm, LoginForm, RolenameForm
 from app.models import User, Role, Rolename, Event, Participant, Participanttypes
 from app import db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
-import re
+import re, random
 from app.send_email import SendEmail
 
 
@@ -459,6 +459,16 @@ def participant_update(participant_id, event_id):
         return render_template('participant_update.html', form=participantform)
 
 
+def generat_unique_id():
+    existed = 1
+    unique_id = 0
+    while existed:
+        unique_id = ''.join([str(random.randint(0, 999)).zfill(3) for _ in range(2)])
+        participant = Participant.query.filter_by(unique_id=unique_id).first()
+        if not participant:
+            existed =0
+    return unique_id
+
 @app.route('/new_participant/<int:event_id>/<string:event_name>', methods=['POST', 'GET'])
 @login_required
 def new_participant(event_id, event_name):
@@ -477,7 +487,7 @@ def new_participant(event_id, event_name):
                 return redirect(url_for('new_participant', event_id=event_id, event_name=event_name))
             else:
                 new_participant = Participant(
-                    name=form.name.data, email=form.email.data, event_id=event_id, Participanttypes_id=form.participant_type.data)
+                        name=form.name.data, email=form.email.data, event_id=event_id, Participanttypes_id=form.participant_type.data, unique_id=generat_unique_id())
                 db.session.add(new_participant)
                 db.session.commit()
                 flash('Participante successfully added', 'info')
@@ -506,7 +516,7 @@ def sendemail(event_id):
     else:
         try:
             for parti in participant:
-                sendEmail =  SendEmail(parti.email, parti.name, str(event.startdate), event.name)
+                sendEmail =  SendEmail(parti.email, parti.name, str(event.startdate), event.name, parti.unique_id )
                 sendEmail.send()
             flash('email successfully sent','info')
             return redirect(url_for('sendemail',event_id=event_id))
