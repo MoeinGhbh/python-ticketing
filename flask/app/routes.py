@@ -4,7 +4,8 @@ from app.forms import CreateEventForm, RegistrationForm, LoginForm, RolenameForm
 from app.models import User, Role, Rolename, Event, Participant, Participanttypes
 from app import db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
-import re, random
+import re
+import random
 from app.send_email import SendEmail
 
 
@@ -185,11 +186,20 @@ def roles_delete(user_id, role_id):
 ############################################## Event  #####################################################
 
 
+def checkAccess():
+    Access = False
+    user = Role.query.filter_by(rolename_id=2, user_id=current_user.id).first()
+    if user or current_user.is_authenticated or current_user.username == 'admin':
+        Access = True
+    return Access
+
+
 @app.route('/event', methods=['GET', 'POST'])
 @login_required
 def event():
     eventform = Event.query.limit(5).all()
-    return render_template('event.html', form=eventform)
+    Access = checkAccess()
+    return render_template('event.html', form=eventform, Access=Access)
 
 
 page_siz = 5
@@ -220,10 +230,7 @@ def paging(move):
 
 homepage_siz = 5
 homepage = 0
-
-
 @app.route('/<float(signed=True):move>/homepaging', methods=['GET', 'POST'])
-@login_required
 def homePaging(move):
     global homepage_siz
     global homepage
@@ -241,15 +248,14 @@ def homePaging(move):
     first = (homepage * homepage_siz)-5
     eventform = Event.query.limit(end).all()
     eventform = eventform[first:]
-    print(first)
-    print(end)
     return render_template('home.html', form=eventform)
 
 
 @app.route('/event/<int:event_id>', methods=['GET', 'POST'])
 def eventdetail(event_id):
     event = Event.query.get_or_404(event_id)
-    return render_template('eventdetail.html', form=event)
+    Access = checkAccess()
+    return render_template('eventdetail.html', form=event, Access=Access)
 
 
 @app.route('/event/new', methods=['GET', 'POST'])
@@ -289,6 +295,7 @@ def delete(event_id):
 @app.route('/event/<int:event_id>/update', methods=['GET', 'POST'])
 @login_required
 def update(event_id):
+    Access = checkAccess()
     event = Event.query.get_or_404(event_id)
     print(event.user_id)
     # print(current_user.username)
@@ -321,7 +328,7 @@ def update(event_id):
         form.startdate.data = event.startdate
         form.enddate.data = event.enddate
         form.capacity.data = event.capacity
-        return render_template('update.html', form=form)
+        return render_template('update.html', form=form, Access=Access)
 
 ############################################### Role Name ######################################################
 
@@ -396,22 +403,25 @@ def role_update(role_id):
 @app.route('/participant/<int:event_id>', methods=['GET', 'POST'])
 @login_required
 def participant(event_id):
+    Access = checkAccess()
     participant = Participant.query.filter_by(event_id=event_id)
     # need join quer instead of select again debt
     event_name = ''
     if Event.query.filter_by(id=event_id).first():
         event_name = Event.query.filter_by(id=event_id).first().name
-    
-    return render_template('participant.html', form=participant, event_id=event_id, event_name=event_name)
+
+    return render_template('participant.html', form=participant, event_id=event_id, event_name=event_name, Access=Access)
 
 
 @app.route('/participantDetail/<int:participant_id>/<int:event_id>', methods=['GET', 'POST'])
 @login_required
 def participantDetail(participant_id, event_id):
     # form = AddParticipantForm()
+    Access = checkAccess()
+    print(Access)
     participant = Participant.query.filter_by(
         id=participant_id, event_id=event_id).first()
-    return render_template('participantdetail.html', form=participant, participant_id=participant_id, event_id=event_id)
+    return render_template('participantdetail.html', form=participant, participant_id=participant_id, event_id=event_id, Access=Access)
 
 
 @app.route('/participantDetail/<int:participant_id>/delete', methods=['GET', 'POST'])
@@ -428,6 +438,7 @@ def participant_delete(participant_id):
 @app.route('/participantDetail/<int:participant_id>/<int:event_id>/update', methods=['GET', 'POST'])
 @login_required
 def participant_update(participant_id, event_id):
+    Access = checkAccess()
     form = AddParticipantForm()
     if request.method == 'POST':
         regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
@@ -444,11 +455,14 @@ def participant_update(participant_id, event_id):
             return redirect(url_for('participantDetail', participant_id=participant_id, event_id=event_id))
     else:
         participantform = AddParticipantForm()
-        participant = Participant.query.filter_by(id=participant_id, event_id=event_id).first()
+        participant = Participant.query.filter_by(
+            id=participant_id, event_id=event_id).first()
 
-        participanttypes = Participanttypes.query.filter_by(id=participant.Participanttypes_id).first()
+        participanttypes = Participanttypes.query.filter_by(
+            id=participant.Participanttypes_id).first()
 
-        participantform.participant_type.choices = [(types.id , types.type) for types  in Participanttypes.query.all() ]
+        participantform.participant_type.choices = [
+            (types.id, types.type) for types in Participanttypes.query.all()]
         participantform.participant_type.default = participanttypes.id
         participantform.process()
 
@@ -456,25 +470,26 @@ def participant_update(participant_id, event_id):
         participantform.email.data = participant.email
         participantform.event_id.data = event_id
         participantform.id.data = participant_id
-        return render_template('participant_update.html', form=participantform)
+        return render_template('participant_update.html', form=participantform,  Access=Access)
 
 
 def generat_unique_id():
     existed = 1
     unique_id = 0
     while existed:
-        unique_id = ''.join([str(random.randint(0, 999)).zfill(3) for _ in range(2)])
+        unique_id = ''.join([str(random.randint(0, 999)).zfill(3)
+                             for _ in range(2)])
         participant = Participant.query.filter_by(unique_id=unique_id).first()
         if not participant:
-            existed =0
+            existed = 0
     return unique_id
+
 
 @app.route('/new_participant/<int:event_id>/<string:event_name>', methods=['POST', 'GET'])
 @login_required
 def new_participant(event_id, event_name):
     print(event_id, event_name)
     form = AddParticipantForm()
-    
 
     regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
     if request.method == "POST":
@@ -487,7 +502,7 @@ def new_participant(event_id, event_name):
                 return redirect(url_for('new_participant', event_id=event_id, event_name=event_name))
             else:
                 new_participant = Participant(
-                        name=form.name.data, email=form.email.data, event_id=event_id, Participanttypes_id=form.participant_type.data, unique_id=generat_unique_id())
+                    name=form.name.data, email=form.email.data, event_id=event_id, Participanttypes_id=form.participant_type.data, unique_id=generat_unique_id())
                 db.session.add(new_participant)
                 db.session.commit()
                 flash('Participante successfully added', 'info')
@@ -496,8 +511,9 @@ def new_participant(event_id, event_name):
             flash('please enter valid email address', 'danger')
             return redirect(url_for('new_participant', event_id=event_id, event_name=event_name))
     else:
-        form.participant_type.choices = [(types.id , types.type) for types  in Participanttypes.query.all() ]
-        form.participant_type.default = 1 # set defaul on prticipant type
+        form.participant_type.choices = [
+            (types.id, types.type) for types in Participanttypes.query.all()]
+        form.participant_type.default = 1  # set defaul on prticipant type
         form.process()
         form.event_name.data = event_name
         form.event_id.data = event_id
@@ -509,17 +525,19 @@ def new_participant(event_id, event_name):
 @app.route('/sendemail/<int:event_id>', methods=['GET', 'POST'])
 @login_required
 def sendemail(event_id):
+    Access = checkAccess()
     participant = Participant.query.filter_by(event_id=event_id)
     event = Event.query.filter_by(id=event_id).first()
     if request.method == "GET":
-        return render_template('sendemail.html', form=participant, recent_event_id=event_id, start_date= event.startdate)
+        return render_template('sendemail.html', form=participant, recent_event_id=event_id, start_date=event.startdate, Access=Access)
     else:
         try:
             for parti in participant:
-                sendEmail =  SendEmail(parti.email, parti.name, str(event.startdate), event.name, parti.unique_id )
+                sendEmail = SendEmail(parti.email, parti.name, str(
+                    event.startdate), event.name, parti.unique_id)
                 sendEmail.send()
-            flash('email successfully sent','info')
-            return redirect(url_for('sendemail',event_id=event_id))
+            flash('email successfully sent', 'info')
+            return redirect(url_for('sendemail', event_id=event_id))
         except:
             flash('sending emails crash')
-            return redirect(url_for('sendemail',event_id=event_id))
+            return redirect(url_for('sendemail', event_id=event_id))

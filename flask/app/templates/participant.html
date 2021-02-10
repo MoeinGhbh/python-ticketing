@@ -58,14 +58,12 @@
                     Back</a>
             </div>
             <div class="col-2">
-                {% if current_user.is_authenticated %}
-                {% if form.username == current_user.username or current_user.username == 'admin' %}
+              
+                {% if Access  %}
                 <a href="{{ url_for('new_participant', event_id=event_id, event_name=event_name) }}"
                     class="btn btn-secondary">add participant</a>
-
-
                 {% endif %}
-                {% endif %}
+              
             </div>
         </div>
         <br>

@@ -3,9 +3,16 @@
         <a class="nav-item nav-link active" href="{{ url_for('home') }}">Home</a>
         {% if current_user.is_authenticated %}
 
+
+        {% if current_user.username == "admin"  %}
+      
+
         <a class="nav-item nav-link active" href="{{ url_for('users') }}">User</a>
 
         <a class="nav-item nav-link active" href="{{ url_for('rolename') }}">Role</a>
+
+        {% endif %}
+
         <a class="nav-item nav-link active" href="{{ url_for('event') }}">event</a>
         <a class="nav-item nav-link active" href="{{ url_for('logout') }}">Logout</a>
         {% else %}
@@ -17,3 +24,4 @@
         <h4 class="text-white bg-dark">  <small class="text-white bg-dark"> my account:</small> {{ current_user.username }}</h4>
     </div>
 </nav>
+
