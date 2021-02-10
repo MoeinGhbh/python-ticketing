@@ -119,6 +119,17 @@ def registration():
         print('not valid')
     return render_template('registration.html', form=reg_form)
 
+
+@app.route('/checkvalidity/<int:unique_id>/<string:email>', methods=['GET','POST'])
+def checkvalidity(unique_id,email):
+    check_valid = '{{"email": {0},"completed:" {1}}}'
+    participant = Participant.query.filter_by(email=email, unique_id=unique_id).first()
+    if participant:
+        check_valid= check_valid.format(email, True)
+    else:
+        check_valid= check_valid.format(email, False)
+    return check_valid
+
 ############################################## user Role  #####################################################
 
 
