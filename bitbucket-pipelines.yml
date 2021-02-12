@@ -19,17 +19,17 @@ pipelines:
             # Enforce style consistency across Python projects https://flake8.pycqa.org/en/latest/manpage.html
             - pip install flake8
             - flake8 flask --extend-exclude=dist,build --show-source --statistics
-        - step:
-            name: Build and Test
-            script:
-              - IMAGE_NAME=${BITBUCKET_REPO_SLUG}-flask
-              - docker build flask --file Dockerfile --tag ${IMAGE_NAME}
-            services:
-              - docker
-            caches:
-              - docker
-        - step:
-            name: Lint the Dockerfile
-            image: hadolint/hadolint:latest-debian
-            script:
-              - hadolint flask/Dockerfile
+       - step:
+           name: Build and Test Docker
+           script:
+             - IMAGE_NAME=${BITBUCKET_REPO_SLUG}-flask
+             - docker build flask --file Dockerfile --tag ${IMAGE_NAME}
+           services:
+             - docker
+           caches:
+             - docker
+       - step:
+           name: Lint the Dockerfile
+           image: hadolint/hadolint:latest-debian
+           script:
+             - hadolint flask/Dockerfile
