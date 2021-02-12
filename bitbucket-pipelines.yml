@@ -40,6 +40,7 @@ pipelines:
     - step:
           name: Push to Azure Container Registry
           deployment: Test
+          trigger: manual
           script:
             - LOGIN_SERVER=vridaycontainerregistry0001.azurecr.io
             - REGISTRY_NAME=vridaycontainerregistry0001
