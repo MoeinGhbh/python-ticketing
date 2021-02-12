@@ -23,7 +23,7 @@ pipelines:
           name: Build and Test Docker
           script:
             - IMAGE_NAME=${BITBUCKET_REPO_SLUG}-flask
-            - docker build flask --file Dockerfile --tag ${IMAGE_NAME}
+            - docker build flask --file flask/Dockerfile --tag ${IMAGE_NAME}
           services:
             - docker
           caches:
