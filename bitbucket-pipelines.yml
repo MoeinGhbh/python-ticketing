@@ -24,13 +24,29 @@ pipelines:
           script:
             - IMAGE_NAME=${BITBUCKET_REPO_SLUG}-flask
             - docker build flask --file flask/Dockerfile --tag ${IMAGE_NAME}
+            - docker save ${IMAGE_NAME} --output "${IMAGE_NAME}.tar"
           services:
             - docker
           caches:
             - docker
+          artifacts:
+            - "*.tar"            
       - step:
           name: Lint the Dockerfile
           image: hadolint/hadolint:latest-debian
           script:
             - hadolint flask/Dockerfile
-
+            
+    - step:
+          name: Push to Azure Container Registry
+          deployment: Test
+          script:
+            - echo ${AZURE_CR_PASS} | docker login --username "$AZURE_CR_USER" --password-stdin
+            - IMAGE_NAME=${BITBUCKET_REPO_SLUG}-flask
+            - docker load --input "${IMAGE_NAME}.tar"
+            - VERSION="test-0.1.${BITBUCKET_BUILD_NUMBER}"
+            - IMAGE=${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}
+            - docker tag "${IMAGE_NAME}" "${IMAGE}:${VERSION}"
+            - docker push "${IMAGE}:${VERSION}"
+          services:
+            - docker
