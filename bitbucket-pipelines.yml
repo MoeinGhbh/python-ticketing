@@ -41,11 +41,13 @@ pipelines:
           name: Push to Azure Container Registry
           deployment: Test
           script:
-            - echo ${AZURE_CR_PASS} | docker login --username "$AZURE_CR_USER" --password-stdin
+            - LOGIN_SERVER=vridaycontainerregistry0001.azurecr.io
+            - REGISTRY_NAME=vridaycontainerregistry0001
+            - echo ${AZURE_CR_PASS} | docker login $LOGIN_SERVER --username "$AZURE_CR_USER" --password-stdin
             - IMAGE_NAME=${BITBUCKET_REPO_SLUG}-flask
             - docker load --input "${IMAGE_NAME}.tar"
             - VERSION="test-0.1.${BITBUCKET_BUILD_NUMBER}"
-            - IMAGE=${DOCKERHUB_NAMESPACE}/${IMAGE_NAME}
+            - IMAGE=${REGISTRY_NAME}/${IMAGE_NAME}
             - docker tag "${IMAGE_NAME}" "${IMAGE}:${VERSION}"
             - docker push "${IMAGE}:${VERSION}"
           services:
