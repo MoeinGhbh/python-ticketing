@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, Length, Email, \
 from app.models import User, Event
 from wtforms.fields.html5 import DateField
 
-####################      User   ##################
+#__________________________ User _______________________
 
 
 class RegistrationForm(FlaskForm):
@@ -56,7 +56,7 @@ class UpdateProfile(FlaskForm):
         if user:
             raise ValidationError("the email is already exist.")
 
-#############      Event      #################
+#____________________  Event ________________________
 
 
 class CreateEventForm(FlaskForm):
@@ -75,7 +75,7 @@ class CreateEventForm(FlaskForm):
         if event:
             raise ValidationError("the event name is already exist.")
 
-###################         Role Name       ####################
+#_____________________  Role Name       ____________________
 
 
 class RolenameForm(FlaskForm):
@@ -83,7 +83,7 @@ class RolenameForm(FlaskForm):
     role_name = StringField("Role Name", validators=[
                             DataRequired(), Length(min=3)])
 
-###################         Role        ########################
+#_____________________  Role  ___________________________
 
 
 class RoleForm(FlaskForm):
@@ -93,7 +93,7 @@ class RoleForm(FlaskForm):
     roles = StringField("User" "s role")
 
 
-####################      Participant     #######################
+#______________________ Participant ________________________
 
 
 class AddParticipantForm(FlaskForm):
