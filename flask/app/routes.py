@@ -30,7 +30,7 @@ def home():
     return render_template("home.html", form=event)
 
 
-#____________________ user login logout   _____________________________
+# ____________________ user login logout   _____________________________
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -59,7 +59,7 @@ def logout():
     return redirect(url_for("home"))
 
 
-#_____________________   user    ________________________
+# _____________________   user    ________________________
 
 
 @app.route("/users", methods=["GET", "POST"])
@@ -154,7 +154,7 @@ def checkvalidity(unique_id, email):
     return check_valid
 
 
-#_____________________ user Role  ______________________
+# _____________________ user Role  ______________________
 
 
 @app.route("/userdetail/<int:user_id>/role")
@@ -220,7 +220,7 @@ def roles_delete(user_id, role_id):
         return redirect(url_for("user_role", user_id=user_id))
 
 
-#_____________________ Event  ____________________
+# _____________________ Event  ____________________
 
 
 def checkAccess():
@@ -377,7 +377,7 @@ def update(event_id):
         return render_template("update.html", form=form, Access=Access)
 
 
-#______________ Role Name ______________________
+# ______________ Role Name ______________________
 
 
 @app.route("/rolename", methods=["GET", "POST"])
@@ -445,7 +445,7 @@ def role_update(role_id):
     return render_template("rolename_update.html", form=form)
 
 
-#_____________________   participants __________________________
+# _____________________   participants __________________________
 
 
 @app.route("/participant/<int:event_id>", methods=["GET", "POST"])
@@ -617,7 +617,7 @@ def new_participant(event_id, event_name):
     return render_template("new_participant.html", form=form)
 
 
-#____________________  Send Email ____________________________
+# ____________________  Send Email ____________________________
 
 
 @app.route("/sendemail/<int:event_id>", methods=["GET", "POST"])
