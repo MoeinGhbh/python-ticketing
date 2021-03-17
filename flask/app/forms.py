@@ -1,16 +1,17 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField
 from wtforms.fields.core import IntegerField, SelectField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from app.models import Role, User, Event, Rolename, Participant
-from flask_login import current_user
+from wtforms.validators import DataRequired, Length, Email, \
+    EqualTo, ValidationError
+from app.models import User, Event
 from wtforms.fields.html5 import DateField
 
-#####################################################      User   ###################################################################
+####################      User   ##################
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField("User Name", validators=[DataRequired(), Length(min=3)])
+    username = StringField("User Name", validators=[
+                           DataRequired(), Length(min=3)])
     email = StringField("Email", validators=[DataRequired(), Email()])
     password = PasswordField(
         "password", validators=[DataRequired(), Length(min=8, max=25)]
@@ -39,7 +40,8 @@ class LoginForm(FlaskForm):
 class UpdateProfile(FlaskForm):
     id = StringField("id")
     email = StringField("Email", validators=[DataRequired(), Email()])
-    username = StringField("User Name", validators=[DataRequired(), Length(min=3)])
+    username = StringField("User Name", validators=[
+                           DataRequired(), Length(min=3)])
 
     def validate_username(self, username):
         # if current_user.username != username.data:
@@ -54,8 +56,7 @@ class UpdateProfile(FlaskForm):
         if user:
             raise ValidationError("the email is already exist.")
 
-
-#####################################################      Event      ###############################################################
+#############      Event      #################
 
 
 class CreateEventForm(FlaskForm):
@@ -74,16 +75,15 @@ class CreateEventForm(FlaskForm):
         if event:
             raise ValidationError("the event name is already exist.")
 
-
-###################################################         Role Name       #############################################################
+###################         Role Name       ####################
 
 
 class RolenameForm(FlaskForm):
     id = StringField("id")
-    role_name = StringField("Role Name", validators=[DataRequired(), Length(min=3)])
+    role_name = StringField("Role Name", validators=[
+                            DataRequired(), Length(min=3)])
 
-
-###################################################         Role        #############################################################
+###################         Role        ########################
 
 
 class RoleForm(FlaskForm):
@@ -93,13 +93,14 @@ class RoleForm(FlaskForm):
     roles = StringField("User" "s role")
 
 
-#####################################################      Participant     ##########################################################
+####################      Participant     #######################
 
 
 class AddParticipantForm(FlaskForm):
     id = StringField("id")
     name = StringField("Participant Name", validators=[DataRequired()])
-    email = StringField("Participant E-mail", validators=[DataRequired(), Email()])
+    email = StringField("Participant E-mail",
+                        validators=[DataRequired(), Email()])
     events = SelectField("event")
     event_name = StringField("Event Name")
     event_id = StringField("Event ID")

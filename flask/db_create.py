@@ -1,5 +1,4 @@
-from app import db
-from app.models import User, Event, Role, Rolename, Participanttypes
+from app.models import User, Role, Rolename, Participanttypes
 from app import db, bcrypt
 
 
@@ -11,7 +10,8 @@ secrets.token_hex(16)
 db.create_all()
 
 hashed_pass = bcrypt.generate_password_hash("123").decode("utf-8")
-new_user = User(username="admin", email="admin@vriday.net", password=hashed_pass)
+new_user = User(username="admin", email="admin@vriday.net",
+                password=hashed_pass)
 db.session.add(new_user)
 db.session.commit()
 

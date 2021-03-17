@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, abort
+from flask import render_template, request, redirect, url_for, flash, abort
 from app import app
 from app.forms import (
     CreateEventForm,
@@ -9,7 +9,14 @@ from app.forms import (
     AddParticipantForm,
     RoleForm,
 )
-from app.models import User, Role, Rolename, Event, Participant, Participanttypes
+from app.models import (
+    User,
+     Role,
+      Rolename, 
+      Event,
+       Participant,
+        Participanttypes
+)
 from app import db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 import re
@@ -23,7 +30,7 @@ def home():
     return render_template("home.html", form=event)
 
 
-############################################## user login logout   #####################################################
+####################### user login logout   ###########################
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -52,7 +59,7 @@ def logout():
     return redirect(url_for("home"))
 
 
-############################################## user    #####################################################
+######################## user    ##############################
 
 
 @app.route("/users", methods=["GET", "POST"])
@@ -116,7 +123,8 @@ def registration():
         abort(403)
     reg_form = RegistrationForm()
     if reg_form.validate_on_submit():
-        hashed_pass = bcrypt.generate_password_hash(reg_form.password.data).decode(
+        hashed_pass = \
+            bcrypt.generate_password_hash(reg_form.password.data).decode(
             "utf-8"
         )
         new_user = User(
@@ -133,10 +141,12 @@ def registration():
     return render_template("registration.html", form=reg_form)
 
 
-@app.route("/checkvalidity/<int:unique_id>/<string:email>", methods=["GET", "POST"])
+@app.route("/checkvalidity/<int:unique_id>/<string:email>", \
+    methods=["GET", "POST"])
 def checkvalidity(unique_id, email):
     check_valid = '{{"email": {0},"completed:" {1}}}'
-    participant = Participant.query.filter_by(email=email, unique_id=unique_id).first()
+    participant = Participant.query.filter_by(email=email, \
+        unique_id=unique_id).first()
     if participant:
         check_valid = check_valid.format(email, True)
     else:
@@ -144,7 +154,7 @@ def checkvalidity(unique_id, email):
     return check_valid
 
 
-############################################## user Role  #####################################################
+######################## user Role  ################################
 
 
 @app.route("/userdetail/<int:user_id>/role")
@@ -180,7 +190,9 @@ def roles_insert(user_id, role_id):
     print(request.method)
     if request.method == "POST" or request.method == "GET":
         print(user_id, role_id)
-        checkRole = Role.query.filter_by(rolename_id=role_id, user_id=user_id).first()
+        checkRole = \
+                Role.query.filter_by(rolename_id=role_id, \
+                    user_id=user_id).first()
         print(checkRole)
         if checkRole:
             flash("This role is already assigned to the user", "danger")
@@ -208,13 +220,14 @@ def roles_delete(user_id, role_id):
         return redirect(url_for("user_role", user_id=user_id))
 
 
-############################################## Event  #####################################################
+########################## Event  ########################
 
 
 def checkAccess():
     Access = False
     user = Role.query.filter_by(rolename_id=2, user_id=current_user.id).first()
-    if user or current_user.is_authenticated or current_user.username == "admin":
+    if user or current_user.is_authenticated or \
+        current_user.username == "admin":
         Access = True
     return Access
 
@@ -349,8 +362,9 @@ def update(event_id):
         return redirect(url_for("eventdetail", event_id=event.id))
     elif request.method == "GET":
         # make user dropdown
-        user = User.query.all()
-        form.users.choices = [(users.id, users.username) for users in User.query.all()]
+        # user = User.query.all()
+        form.users.choices = [(users.id, users.username) \
+            for users in User.query.all()]
         form.users.default = event.user_id
         form.process()
         ########
@@ -363,7 +377,7 @@ def update(event_id):
         return render_template("update.html", form=form, Access=Access)
 
 
-############################################### Role Name ######################################################
+##################### Role Name ##########################
 
 
 @app.route("/rolename", methods=["GET", "POST"])
@@ -385,7 +399,8 @@ def rolenamedetail(rolename_id):
 def new_rolename():
     form = RolenameForm()
     if form.validate_on_submit():
-        rolename = Rolename.query.filter_by(role_name=form.role_name.data).first()
+        rolename = \
+    Rolename.query.filter_by(role_name=form.role_name.data).first()
         if rolename:
             flash("thid Role already exist", "danger")
             return render_template("new_role.html", form=form)
@@ -430,7 +445,7 @@ def role_update(role_id):
     return render_template("rolename_update.html", form=form)
 
 
-###########################################        participants        ####################################
+#####################        participants        ##########################
 
 
 @app.route("/participant/<int:event_id>", methods=["GET", "POST"])
@@ -453,7 +468,8 @@ def participant(event_id):
 
 
 @app.route(
-    "/participantDetail/<int:participant_id>/<int:event_id>", methods=["GET", "POST"]
+    "/participantDetail/<int:participant_id>/<int:event_id>", \
+         methods=["GET", "POST"]
 )
 @login_required
 def participantDetail(participant_id, event_id):
@@ -472,7 +488,8 @@ def participantDetail(participant_id, event_id):
     )
 
 
-@app.route("/participantDetail/<int:participant_id>/delete", methods=["GET", "POST"])
+@app.route("/participantDetail/<int:participant_id>/delete",\
+     methods=["GET", "POST"])
 @login_required
 def participant_delete(participant_id):
     print(participant_id)
@@ -600,7 +617,7 @@ def new_participant(event_id, event_name):
     return render_template("new_participant.html", form=form)
 
 
-###########################################        Send Email        ####################################
+##################        Send Email        ##########################
 
 
 @app.route("/sendemail/<int:event_id>", methods=["GET", "POST"])
