@@ -6,14 +6,13 @@ from email.mime.multipart import MIMEMultipart
 
 
 class SendEmail:
-
     def __init__(self, receiver_email, reciver_name, startdate, event_name, unique_id):
         self.smtp_server = "smtp.office365.com"
         self.port = 587  # For starttls
         # self.sender_email = "m.ghobbeh@vriday.net"
         # self.password = "Rose.Raeein@83"
         # self.sender_email = "service-account@nexr-seminar.com"
-        self.sender_email ="info.seminar@nexr-seminar.com"
+        self.sender_email = "info.seminar@nexr-seminar.com"
         self.password = "zCnZZyvMpEVPedADzrZYJUsngja84a"
 
         self.receiver_email = receiver_email
@@ -47,21 +46,33 @@ class SendEmail:
         message["To"] = self.receiver_email
 
         # Create the plain-text and HTML version of your message
-        text = """\
-        Hi Dear """+ self.reciver_name +""",
+        text = (
+            """\
+        Hi Dear """
+            + self.reciver_name
+            + """,
         You invited to join us in NexR Seminar.
         """
+        )
 
-
-        html = """\
+        html = (
+            """\
         <html>
         <body>
             <h3> THIS EMAIL SEND FROM THE WEBSITE OF NEXR SEMINAR FOR TEST FUNCTIONALITY </h3>
-            <p>Hi Dear """+ self.reciver_name +""",<br><br>
-            You invited to join us in NexR Seminar call " """+ self.event_name +""" " on """ + self.startdate + """.<br>
+            <p>Hi Dear """
+            + self.reciver_name
+            + """,<br><br>
+            You invited to join us in NexR Seminar call " """
+            + self.event_name
+            + """ " on """
+            + self.startdate
+            + """.<br>
             <a href="https://nexr-seminar.com/">Nexr-seminar</a> 
             has many great experince.<br><br>
-            this is your ID: """ + str(self.unique_id) + """<br><br>
+            this is your ID: """
+            + str(self.unique_id)
+            + """<br><br>
            
             <br>
             <br>
@@ -72,6 +83,7 @@ class SendEmail:
         </body>
         </html>
         """
+        )
 
         # Turn these into plain/html MIMEText objects
         part1 = MIMEText(text, "plain")
@@ -89,6 +101,8 @@ class SendEmail:
             server.starttls(context=context)
             server.ehlo()  # Can be omitted
             server.login(self.sender_email, self.password)
-            server.sendmail('info.seminar@nexr-seminar111.com',
-                            self.receiver_email, message.as_string())
-
+            server.sendmail(
+                "info.seminar@nexr-seminar111.com",
+                self.receiver_email,
+                message.as_string(),
+            )

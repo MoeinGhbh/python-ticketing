@@ -15,7 +15,7 @@ WORKDIR /app
 # RUN /opt/venv/bin/python3 -m pip install --upgrade pip
 
 # Copy the current directory contents into the container at /app 
-ADD . /app
+COPY . /app
 
 # Install the dependencies
 RUN pip install -r requirements.txt
