@@ -64,7 +64,8 @@ class Participanttypes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(50), nullable=False)
     parti = \
-        db.relationship("Participant", backref="ParticipantTypes_id", lazy=True)
+        db.relationship(
+            "Participant", backref="ParticipantTypes_id", lazy=True)
 
 
 class Participant(db.Model):
@@ -74,7 +75,8 @@ class Participant(db.Model):
     event_id = \
         db.Column(db.Integer, db.ForeignKey("event.id"), nullable=False)
     Participanttypes_id = \
-        db.Column(db.Integer, db.ForeignKey("participanttypes.id"),nullable=False)
+        db.Column(db.Integer, db.ForeignKey(
+            "participanttypes.id"), nullable=False)
     unique_id = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):

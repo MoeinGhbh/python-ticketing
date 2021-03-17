@@ -41,7 +41,7 @@ def login():
     if login_form.validate_on_submit():
         user = User.query.filter_by(email=login_form.email.data).first()
         if user and \
-            bcrypt.check_password_hash(user.password, \
+            bcrypt.check_password_hash(user.password,
                                        login_form.password.data):
             login_user(user, remember=login_form.remember.data)
             # next_page = request.args.get('next')
@@ -187,12 +187,12 @@ def user_role(user_id):
 @app.route("/userdetail/<int:user_id>/<int:role_id>/insert")
 @login_required
 def roles_insert(user_id, role_id):
-    roleform = RoleForm()
+    # roleform = RoleForm()
     print(request.method)
     if request.method == "POST" or request.method == "GET":
         print(user_id, role_id)
         checkRole = \
-            Role.query.filter_by(rolename_id=role_id,user_id=user_id) \
+            Role.query.filter_by(rolename_id=role_id, user_id=user_id) \
             .first()
         print(checkRole)
         if checkRole:
@@ -228,7 +228,7 @@ def checkAccess():
     Access = False
     user = Role.query.filter_by(rolename_id=2, user_id=current_user.id).first()
     if user or current_user.is_authenticated or \
-        current_user.username == "admin":
+            current_user.username == "admin":
         Access = True
     return Access
 
@@ -564,7 +564,7 @@ def generat_unique_id():
     unique_id = 0
     while existed:
         unique_id = "".join([str(random.randint(0, 999)).zfill(3)
-                            for _ in range(2)])
+                             for _ in range(2)])
         participant = Participant.query.filter_by(unique_id=unique_id).first()
         if not participant:
             existed = 0
