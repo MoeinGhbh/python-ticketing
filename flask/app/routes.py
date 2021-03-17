@@ -40,7 +40,9 @@ def login():
     login_form = LoginForm()
     if login_form.validate_on_submit():
         user = User.query.filter_by(email=login_form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, login_form.password.data):
+        if user and \
+            bcrypt.check_password_hash(user.password, \
+                                       login_form.password.data):
             login_user(user, remember=login_form.remember.data)
             # next_page = request.args.get('next')
             flash("You login successfully", "success")
@@ -125,7 +127,7 @@ def registration():
     if reg_form.validate_on_submit():
         hashed_pass = \
             bcrypt.generate_password_hash(reg_form.password.data) \
-                                        .decode("utf-8")
+            .decode("utf-8")
         new_user = User(
             username=reg_form.username.data,
             email=reg_form.email.data,
@@ -191,7 +193,7 @@ def roles_insert(user_id, role_id):
         print(user_id, role_id)
         checkRole = \
             Role.query.filter_by(rolename_id=role_id,user_id=user_id) \
-                                .first()
+            .first()
         print(checkRole)
         if checkRole:
             flash("This role is already assigned to the user", "danger")

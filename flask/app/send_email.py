@@ -6,7 +6,8 @@ from email.mime.multipart import MIMEMultipart
 
 
 class SendEmail:
-    def __init__(self, receiver_email, reciver_name, startdate, event_name, unique_id):
+    def __init__(self, receiver_email, reciver_name, \
+                 startdate, event_name, unique_id):
         self.smtp_server = "smtp.office365.com"
         self.port = 587  # For starttls
         # self.sender_email = "m.ghobbeh@vriday.net"
@@ -59,19 +60,20 @@ class SendEmail:
             """\
         <html>
         <body>
-            <h3> THIS EMAIL SEND FROM THE WEBSITE OF NEXR SEMINAR FOR TEST FUNCTIONALITY </h3>
+            <h3> THIS EMAIL SEND FROM THE WEBSITE OF 
+            NEXR SEMINAR FOR TEST FUNCTIONALITY </h3>
             <p>Hi Dear """
-            + self.reciver_name
+            + self.reciver_name \
             + """,<br><br>
             You invited to join us in NexR Seminar call " """
-            + self.event_name
+            + self.event_name \
             + """ " on """
-            + self.startdate
+            + self.startdate \
             + """.<br>
             <a href="https://nexr-seminar.com/">Nexr-seminar</a> 
             has many great experince.<br><br>
             this is your ID: """
-            + str(self.unique_id)
+            + str(self.unique_id) \
             + """<br><br>
            
             <br>
