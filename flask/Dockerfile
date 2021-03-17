@@ -18,7 +18,7 @@ WORKDIR /app
 COPY . /app
 
 # Install the dependencies
-RUN pip install -r --no-cache-dir requirements.txt
+RUN pip install -r requirements.txt
 
 # run the command to start uWSGI
 CMD ["uwsgi", "app.ini"]
