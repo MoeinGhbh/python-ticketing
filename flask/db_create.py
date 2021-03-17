@@ -7,6 +7,7 @@ import secrets
 secrets.token_hex(16) 
 
 
+
 db.create_all()
 
 hashed_pass = bcrypt.generate_password_hash('123').decode('utf-8')

@@ -10,7 +10,7 @@ def load_user(user_id):
 
 class Rolename(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    role_name = db.Column(db.String, nullable=False, unique=True)
+    role_name = db.Column(db.String(50), nullable=False, unique=True)
     roles = db.relationship('Role', backref='rolename', lazy=True)
 
     def __repr__(self):
@@ -58,7 +58,7 @@ class Event(db.Model):
 
 class Participanttypes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String, nullable=False)
+    type = db.Column(db.String(50), nullable=False)
     parti = db.relationship(
         'Participant', backref='ParticipantTypes_id', lazy=True)
 

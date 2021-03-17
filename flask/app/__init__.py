@@ -4,15 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'a2a58d01c94d129e7407823e6faf1ace'
-
-
-# Devlope configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../seminar.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# Production
-# app.config.from_object('config')
-
+app.config.from_object('config')
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)

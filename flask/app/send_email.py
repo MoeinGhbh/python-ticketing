@@ -10,10 +10,15 @@ class SendEmail:
     def __init__(self, receiver_email, reciver_name, startdate, event_name, unique_id):
         self.smtp_server = "smtp.office365.com"
         self.port = 587  # For starttls
-        self.sender_email = "m.ghobbeh@vriday.net"
+        # self.sender_email = "m.ghobbeh@vriday.net"
+        # self.password = "Rose.Raeein@83"
+        # self.sender_email = "service-account@nexr-seminar.com"
+        self.sender_email ="info.seminar@nexr-seminar.com"
+        self.password = "zCnZZyvMpEVPedADzrZYJUsngja84a"
+
         self.receiver_email = receiver_email
-        self.password = "Rose.Raeein@83"
         self.reciver_name = reciver_name
+
         self.startdate = startdate
         self.event_name = event_name
         self.unique_id = unique_id
@@ -84,5 +89,6 @@ class SendEmail:
             server.starttls(context=context)
             server.ehlo()  # Can be omitted
             server.login(self.sender_email, self.password)
-            server.sendmail(self.sender_email,
+            server.sendmail('info.seminar@nexr-seminar111.com',
                             self.receiver_email, message.as_string())
+
