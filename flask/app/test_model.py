@@ -1,8 +1,8 @@
-import pytest
-import sqlite3
+# import pytest
+# import sqlite3
 
 # from db_create import
-from app import models, routers, db_create
+# from app import models, routers, db_create
 
 # @pytest.fixture()
 # def db():
