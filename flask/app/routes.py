@@ -572,7 +572,7 @@ def generat_unique_id():
 
 
 @app.route(
-"/new_participant/<int:event_id>/<string:event_name>", \
+"/new_participant/<int:event_id>/<string:event_name>", 
      methods=["POST", "GET"]
 )
 @login_required
