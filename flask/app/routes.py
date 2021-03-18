@@ -86,7 +86,7 @@ def user_update(user_id):
         abort(403)
     form = UpdateProfile()
     if request.method == "POST":
-        regex = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
+        regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
         if re.match(regex, form.email.data):
             users.username = form.username.data
             users.email = form.email.data
@@ -303,7 +303,7 @@ def eventdetail(event_id):
 @login_required
 def new_event():
     form = CreateEventForm()
-    regex = "\d+"
+    regex = r'\d+'
     if re.match(regex, str(form.capacity.data)):
         if request.method == "POST":
             event = Event(
@@ -510,7 +510,7 @@ def participant_update(participant_id, event_id):
     Access = checkAccess()
     form = AddParticipantForm()
     if request.method == "POST":
-        regex = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
+        regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
         if re.match(regex, str(form.email.data)):
             participant = Participant.query.get_or_404(participant_id)
             participant.name = form.name.data
@@ -579,7 +579,7 @@ def new_participant(event_id, event_name):
     print(event_id, event_name)
     form = AddParticipantForm()
 
-    regex = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
+    regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
     if request.method == "POST":
         print("new participants")
         if re.match(regex, str(form.email.data)):
