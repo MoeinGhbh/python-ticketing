@@ -12,4 +12,4 @@ login_manager.login_view = "login"
 login_manager.login_message = "Please login as first step"
 login_manager.login_message_category = "info"
 
-from app import routes # noqa: E402,E401
+from app import routes  # noqa: E402,F401
