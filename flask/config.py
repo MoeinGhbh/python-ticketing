@@ -3,7 +3,7 @@
 # format: (user):(password)@(db_identifier).amazonaws.com:3306/(db_name)
 
 SQLALCHEMY_DATABASE_URI = \
-    "mysql+pymysql://admin:admin_Vriday.net@" \
+    "mysql+pymysql://admin:admin_Vriday.net@" + \
     "nexr-database.cie7ndk7wlfk.eu-central-1.rds.amazonaws.com:3306/nexr_database"
 
 # Uncomment the line below if you want to work with a local DB
